@@ -7,5 +7,5 @@ urlpatterns = [
     path('<int:pk>/following/', views.ProfileFollowingAPIView.as_view()),
     path('<int:pk>/followers/', views.ProfileFollowersAPIView.as_view()),
     path('<int:pk>/posts/', views.ProfilesPostsAPIView.as_view()),
-    path('<int:pk>/posts/<int:pk2>/', views.ProfilesPostAPIView.as_view())
+    path('<int:pk1>/posts/<int:pk2>/', views.ProfilesPostAPIView.as_view())
 ]

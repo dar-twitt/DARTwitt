@@ -6,8 +6,8 @@ class Post(models.Model):
     image = models.ImageField(default=None, null=True)
     text = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now=True)
-    repost = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None, null=True, related_name='repost')
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='owner')
+    repost = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None, null=True, related_name='reposts')
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts')
 
     class Meta:
         verbose_name = 'Post'
@@ -17,8 +17,8 @@ class Post(models.Model):
 class Comment(models.Model):
     text = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
 
     class Meta:
         verbose_name = 'Comment'
@@ -26,9 +26,9 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None, null=True, related_name='likes')
     # comment = models.ForeignKey(Comment, on_delete=models.CASCADE, default=None, null=True)
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='likes')
 
     class Meta:
         verbose_name = 'Like'

@@ -13,12 +13,14 @@ class ProfilesAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
+    # ok
 
 
 class ProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
+    # ok
 
 
 class ProfileFollowingAPIView(generics.ListAPIView):
@@ -27,6 +29,7 @@ class ProfileFollowingAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return Profile.objects.get(id=self.request['pk']).following.all()
+    # Refactor logic
 
 
 class ProfileFollowersAPIView(generics.ListAPIView):
@@ -35,6 +38,7 @@ class ProfileFollowersAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return Profile.objects.get(id=self.request['pk']).followers.all()
+    # Refactor logic
 
 
 class ProfilesPostsAPIView(generics.ListCreateAPIView):
@@ -42,18 +46,19 @@ class ProfilesPostsAPIView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Profile.objects.get(id=self.kwargs['id']).post_set.all()
+        return Profile.objects.get(id=self.kwargs['pk']).posts.all()
 
     def perform_create(self, serializer):
         profile = Profile.objects.get(id=self.kwargs['pk'])
         return serializer.save(owner=profile)
+    # ok
 
 
-class ProfilesPostAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = PostSerializer
-
-    def get_queryset(self):
-        return Profile.objects.get(id=self.kwargs['id']).post_set.get(id=self.kwargs['pk2'])
-
-    # TODO have to be overwritten with cbv
+# class ProfilesPostAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = PostSerializer
+#
+#     def get_queryset(self):
+#         return Profile.objects.get(id=self.kwargs['pk']).posts.get(id=self.kwargs['pk2'])
+#
+#     # TODO have to be overwritten with cbv
