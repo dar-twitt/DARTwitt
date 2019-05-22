@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from homepage.models import Profile
+from homepage.models import Profile, Follow
 from post.models import Post
 from post.serializers import PostSerializer
 
@@ -43,4 +43,33 @@ class ProfilesPostAPIView(APIView):
         except Post.DoesNotExist:
             raise Http404
         post.delete()
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProfileFollowOperation(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_profile(self, pk):
+        try:
+            profile = Profile.objects.get(id=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+        return profile
+
+    def post(self, request, pk1, pk2):
+        profile1 = self.get_profile(pk=pk1)
+        profile2 = self.get_profile(pk=pk2)
+        try:
+            Follow.objects.get(profile1=profile1, profile2=profile2)
+            return Response({'status': 'already exist'}, status=status.HTTP_200_OK)
+        except Follow.DoesNotExist:
+            follow = Follow(profile1=profile1, profile2=profile2)
+            follow.save()
+            return Response({}, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, pk1, pk2):
+        profile1 = self.get_profile(pk=pk1)
+        profile2 = self.get_profile(pk=pk2)
+        follow = Follow.objects.get(profile1=profile1, profile2=profile2)
+        follow.delete()
         return Response({}, status=status.HTTP_204_NO_CONTENT)

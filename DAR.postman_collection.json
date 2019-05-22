@@ -734,6 +734,132 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "profile's followers",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile/3/followers/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile",
+						"3",
+						"followers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile's following",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile/3/following/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile",
+						"3",
+						"following",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "follow another profile post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile/3/follow/4/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile",
+						"3",
+						"follow",
+						"4",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unfollow someone delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile/3/follow/4/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile",
+						"3",
+						"follow",
+						"4",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
