@@ -5,7 +5,7 @@ from homepage.models import Profile, Follow
 
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    avatar = serializers.ImageField(required=False)
+    avatar = serializers.CharField(required=False)
     bio = serializers.CharField(required=False)
     created_at = serializers.DateTimeField(required=False)
     following = UserSerializer(required=False)
@@ -16,12 +16,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
-    def update(self, instance, validated_data):
-        instance.image = validated_data.get('image', instance.image)
-        instance.text = validated_data.get('text', instance.text)
-        instance.created_at = validated_data.get('created_at', instance.created_at)
-        instance.save()
-        return instance
+    # def update(self, instance, validated_data):
+    #     instance.avatar = validated_data.get('image', instance.image)
+    #     instance.text = validated_data.get('text', instance.text)
+    #     instance.created_at = validated_data.get('created_at', instance.created_at)
+    #     instance.save()
+    #     return instance
 
 
 class FollowSerializer(serializers.ModelSerializer):
