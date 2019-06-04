@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './WelcomePage.css';
-import { Route, Redirect } from 'react-router';
+import {connect} from "react-redux";
 
 class WelcomePage extends Component {
 
@@ -11,6 +11,7 @@ class WelcomePage extends Component {
     }
 
     loginRedirect = () => {
+        console.log(this.props);
         this.props.history.push('/login');
     };
 
@@ -35,5 +36,9 @@ class WelcomePage extends Component {
         );
     }
 }
-
-export default WelcomePage;
+export function mapStateToProps(state){
+    return {
+        token: state.token
+    }
+}
+export default connect(mapStateToProps, {})(WelcomePage);

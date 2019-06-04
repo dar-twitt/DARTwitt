@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import './App.css';
 // import createBrowserHistory from "history/createBrowserHistory";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
 import WelcomePage from "./components/WelcomePage/WelcomePage";
 import SignUp from "./components/SignUp/SignUp";
-import SignIn from "./components/SigIn/SignIn";
+import SignIn from "./components/SignIn/SignIn";
 import Profile from "./components/Profile/Profile";
 import Posts from "./components/Posts/Posts";
 

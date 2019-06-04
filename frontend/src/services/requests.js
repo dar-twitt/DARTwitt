@@ -43,8 +43,10 @@ export function createProfilesPost(profile){
     return axios.post(`http://localhost:8000/profile/${profile.id}/posts/`, {});
 }
 
-export function getPosts(){
-    return axios.get(`http://localhost:8000/post/`, {});
+export function getPosts(token){
+    return axios.get(`http://localhost:8000/post/`, {
+        // headers:
+    });
 }
 
 export function getProfilesPost(profile, post){
