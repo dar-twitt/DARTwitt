@@ -7,20 +7,47 @@ export function login(username, password){
     })
 }
 
-export function logout(){
-    return axios.post('http://localhost:8000/user/logout/', {});
-}
-
-export function getProfiles(){
-    return axios.post('http://localhost:8000/profile/', {});
-}
-
-export function createProfile(bio, name, surname){
-    return axios.post('http://localhost:8000/profile/', {
-        bio: bio,
-        name: name,
-        surname: surname
+export function logout(token){
+    console.log(token);
+    // return axios({
+    //     method: 'POST',
+    //     url: 'http://localhost:8000/user/logout/',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': token
+    //     },
+    //     data: {},
+    //     json: true
+    // });
+    return axios.post('http://localhost:8000/user/logout/',{}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            }
     });
+}
+
+export function getProfiles(token){
+    return axios.get('http://localhost:8000/profile/', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+        }
+    });
+}
+
+export function createProfile(token, name, surname){
+    return axios.post('http://localhost:8000/profile/', {
+            name: name,
+            surname: surname
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            }
+        }
+    );
 }
 
 export function updateProfile(profile){
@@ -45,7 +72,10 @@ export function createProfilesPost(profile){
 
 export function getPosts(token){
     return axios.get(`http://localhost:8000/post/`, {
-        // headers:
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+        }
     });
 }
 
@@ -122,3 +152,12 @@ export function followProfile(yourProfile, anotherProfile){
 export function unfollowProfile(yourProfile, anotherProfile){
     return axios.delete(`http://localhost:8000/${yourProfile.id}/follow/${anotherProfile.id}`, {});
 }
+
+export function registerUser(username, password, email){
+    return axios.post('http://localhost:8000/user/register/', {
+        username: username,
+        password: password,
+        email: email
+    });
+}
+

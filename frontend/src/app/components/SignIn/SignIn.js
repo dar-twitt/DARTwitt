@@ -26,7 +26,8 @@ class SignIn extends Component {
             this.setState({
                 username: '',
                 password: ''
-            })
+            });
+            this.props.history.push('/posts');
         }else{
             alert('SORRY, something is empty!');
         }
@@ -60,9 +61,9 @@ class SignIn extends Component {
     }
 }
 
-export function mapStateToProps(state){
+export function mapStateToProps(store){
     return {
-        ...state
+        ...store
     }
 }
 export default connect(mapStateToProps, { login })(SignIn);
