@@ -12,7 +12,8 @@ export default function(state=initialState, action){
         case REGISTER_USER:
             return {
                 ...state,
-                status: action.payload.status
+                status: action.payload.status,
+                currentUser: action.payload.currentUser
             };
         case CREATE_PROFILE:
             return {
@@ -23,7 +24,8 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 token: null,
-                profile: null
+                profile: null,
+                posts: []
             };
         case GET_POSTS:
             return {

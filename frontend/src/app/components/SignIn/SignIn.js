@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import './SignIn.css';
 import { login } from '../../../actions/blog.actions';
 import {connect} from "react-redux";
+import * as request from '../../../services/requests';
 
 class SignIn extends Component {
 
@@ -22,12 +23,19 @@ class SignIn extends Component {
     loginAction = () => {
         const { username, password } = this.state;
         if( username && password){
-            this.props.login(username, password);
-            this.setState({
-                username: '',
-                password: ''
-            });
-            this.props.history.push('/posts');
+            request.login(username, password)
+                .then(response => {
+                    this.props.login(response);
+                    this.setState({
+                        username: '',
+                        password: ''
+                    });
+                    this.props.history.push('/posts');
+                })
+                .catch(response => {
+                    alert('SORRY, something wrong!');
+                })
+
         }else{
             alert('SORRY, something is empty!');
         }

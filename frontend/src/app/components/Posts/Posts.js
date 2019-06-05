@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import { connect } from "react-redux";
 import { logout, getPosts } from "../../../actions/blog.actions";
 import Post from '../Post/Post';
+import * as request from "../../../services/requests";
 class Posts extends Component {
 
     state = {
@@ -10,20 +11,33 @@ class Posts extends Component {
     };
 
     componentDidMount() {
-        console.log(this.props.token);
-        this.props.getPosts(this.props.token);
-        this.setState({
-            posts: this.props.posts
-        });
+        const { token } = this.props;
+        request.getPosts(token)
+            .then(response => {
+                this.props.getPosts(response);
+                this.setState({
+                    posts: this.props.posts
+                })
+            })
+            .catch(response => {
+                alert('Something Wrong');
+            })
     }
 
     handleLogoutClick = () => {
-        this.props.logout(this.props.token);
+        const { token } = this.props;
+        request.logout(token)
+            .then(response => {
+                localStorage.removeItem('token');
+                this.props.logout(response);
+            })
+            .catch(response => {
+                alert('Something wrong!');
+            });
     };
 
     render() {
         const { posts } = this.state;
-        console.log(this.state);
         return (
             <div className = "PostsComponent">
                 <nav className="posts-nav">
@@ -44,6 +58,7 @@ class Posts extends Component {
         );
     }
 }
+
 export function mapStateToProps(store){
     return {
         token: store.blog.token,

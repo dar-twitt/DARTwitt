@@ -4,7 +4,7 @@ export function login(username, password){
     return axios.post('http://localhost:8000/user/login/', {
         username: username,
         password: password
-    })
+    });
 }
 
 export function logout(token){
@@ -158,6 +158,8 @@ export function registerUser(username, password, email){
         username: username,
         password: password,
         email: email
+    }, {
+        'Content-Type': 'application/json'
     });
 }
 

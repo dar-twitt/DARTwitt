@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import './SignUp.css';
 import { register, login, createProfile } from "../../../actions/blog.actions";
 import {connect} from "react-redux";
+import * as request from "../../../services/requests";
 
 class SignUp extends Component {
 
@@ -19,36 +20,41 @@ class SignUp extends Component {
         this.setState({
             [e.target.name]: e.target.value
         });
-        // console.log("username " + this.state.username);
-        // console.log("password " + this.state.password);
     };
 
-    // componentDidUpdate(prevProps){
-    //     // to avoid infinite loop, set state in condition
-    //     if( this.props.status !== prevProps.status ){
-    //         this.setState({
-    //             status: this.props.status
-    //         });
-    //     }
-    // }
-    //have to be fixed
     signUp = () => {
         const { username, password, email, name, surname } = this.state;
         if( username && password && email && name && surname){
-            this.props.register(username, password, email);
-            console.log(this.props);
-            if(this.props.status === 'registered'){
-                this.props.login(username, password);
-                this.props.createProfile(this.props.token, name, surname);
-            }
-            this.setState({
-                username: '',
-                password: '',
-                email: '',
-                name: '',
-                surname: ''
-            });
-
+            request.registerUser(username, password, email)
+                .then(response => {
+                    this.props.register(response);
+                    console.log(username, password);
+                    request.login(username, password)
+                        .then(res => {
+                            this.props.login(res);
+                            request.createProfile(this.props.token, name, surname)
+                                .then(r => {
+                                    this.props.createProfile(r);
+                                    this.setState({
+                                        username: '',
+                                        password: '',
+                                        email: '',
+                                        name: '',
+                                        surname: ''
+                                    });
+                                    this.props.history.push('/posts');
+                                })
+                                .catch(r => {
+                                    alert('SORRY, something wrong!');
+                                })
+                        })
+                        .catch(res => {
+                            alert('SORRY, something wrong! ' + res);
+                        })
+                })
+                .catch(response => {
+                    alert('SORRY, something wrong!');
+                });
         }else{
             alert('SORRY, something is empty!');
         }
