@@ -1,0 +1,20 @@
+.posts-main{
+    display: flex;
+}
+
+.posts-left{
+    width: 25%;
+    height: 400vh;
+}
+
+.posts-center{
+    width: 45%;
+}
+
+.PostsComponent{
+    background: #fff7f7;
+}
+
+.posts-left{
+    margin-left: 5%;
+}

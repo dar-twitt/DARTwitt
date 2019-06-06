@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import { connect } from "react-redux";
 import { logout, getPosts } from "../../../actions/blog.actions";
 import Post from '../Post/Post';
+import LeftProfile from '../LeftProfile/LeftProfile';
 import * as request from "../../../services/requests";
 class Posts extends Component {
 
@@ -44,7 +45,7 @@ class Posts extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="posts-main">
-                    <div className="posts-left">Left</div>
+                    <div className="posts-left"><LeftProfile/></div>
                     <div className="posts-center">
                         {
                             posts.map((post, index) => {

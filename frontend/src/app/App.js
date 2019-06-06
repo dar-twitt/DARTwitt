@@ -8,7 +8,7 @@ import SignIn from "./components/SignIn/SignIn";
 import Profile from "./components/Profile/Profile";
 import Posts from "./components/Posts/Posts";
 import ImageUpload from "./components/ImageUpload";
-
+import LeftProfile from "./components/LeftProfile/LeftProfile";
 // const history = createBrowserHistory();
 
 
@@ -31,6 +31,7 @@ class App extends Component {
             <Route exact path="/login" component = { SignIn }/>
             <Route exact path="/profile" component = { Profile }/>
             <Route exact path="/posts" component = { Posts }/>
+            <Route exact path="/leftprofile" component = { LeftProfile }/>
         </div>
     );
   }
