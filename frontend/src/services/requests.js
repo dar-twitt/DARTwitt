@@ -158,7 +158,7 @@ export function registerUser(username, password, email){
         username: username,
         password: password,
         email: email
-    }, {
+    },  {
         'Content-Type': 'application/json'
     });
 }

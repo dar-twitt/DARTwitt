@@ -4,7 +4,7 @@ export const REGISTER_USER = 'REGISTER_USER';
 export const CREATE_PROFILE = 'CREATE_PROFILE';
 export const LOG_OUT = 'LOG_OUT';
 
-export const login = (response) => dispatch => {
+export const login = response => dispatch => {
     localStorage.setItem('token', response.data.token);
     dispatch({
         type: LOGIN,

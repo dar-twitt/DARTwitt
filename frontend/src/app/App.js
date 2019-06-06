@@ -7,6 +7,7 @@ import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
 import Profile from "./components/Profile/Profile";
 import Posts from "./components/Posts/Posts";
+import ImageUpload from "./components/ImageUpload";
 
 // const history = createBrowserHistory();
 
@@ -24,6 +25,7 @@ class App extends Component {
             {/*        <Link className = "nav__link" to="/posts">Posts Page</Link>*/}
             {/*    </nav>*/}
             {/*</div>*/}
+            <Route exact path="/asdf" component = { ImageUpload }/>
             <Route exact path="/" component = { WelcomePage }/>
             <Route exact path="/register" component = { SignUp }/>
             <Route exact path="/login" component = { SignIn }/>
