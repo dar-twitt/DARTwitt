@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import './SignUp.css';
-import { register, login, createProfile } from "../../../actions/blog.actions";
+import { register, login } from "../../../actions/blog.actions";
 import {connect} from "react-redux";
-import * as request from "../../../services/requests";
+import request from "../../../services/requests";
+import {updateHeader} from "../../../services/api";
 
 class SignUp extends Component {
 
@@ -28,13 +29,13 @@ class SignUp extends Component {
             request.registerUser(username, password, email)
                 .then(response => {
                     this.props.register(response);
-                    console.log(username, password);
                     request.login(username, password)
                         .then(res => {
+                            updateHeader('Authorization', `Token ${res.data.token}`);
                             this.props.login(res);
-                            request.createProfile(this.props.token, name, surname)
+                            request.createProfile(name, surname)
                                 .then(r => {
-                                    this.props.createProfile(r);
+                                    localStorage.setItem('token', res.data.token);
                                     this.setState({
                                         username: '',
                                         password: '',
@@ -106,4 +107,4 @@ export function mapStateToProps(store){
         token: store.blog.token,
     }
 }
-export default connect(mapStateToProps, { register, login, createProfile })(SignUp);
+export default connect(mapStateToProps, { register, login })(SignUp);

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import './SignIn.css';
 import { login } from '../../../actions/blog.actions';
 import {connect} from "react-redux";
-import * as request from '../../../services/requests';
+import request from '../../../services/requests';
+import {updateHeader} from "../../../services/api";
 
 class SignIn extends Component {
 
@@ -16,8 +17,6 @@ class SignIn extends Component {
         this.setState({
             [e.target.name]: e.target.value
         });
-        // console.log("username " + this.state.username);
-        // console.log("password " + this.state.password);
     };
 
     loginAction = () => {
@@ -25,7 +24,20 @@ class SignIn extends Component {
         if( username && password){
             request.login(username, password)
                 .then(response => {
+                    updateHeader('Authorization', `Token ${response.data.token}`);
                     this.props.login(response);
+                    localStorage.setItem('token', response.data.token);
+                    // request.getCurrentUser(response.data.token)
+                    //     .then(res => {
+                    //         localStorage.setItem('currentUser', JSON.stringify(res.data));
+                    //         this.props.getCurrentUser(res);
+                    //     })
+                    //     .catch();
+                    // request.getOwnProfile()
+                    //     .then(res => {
+                    //         this.props.getProfile(res);
+                    //     })
+                    //     .catch();
                     this.setState({
                         username: '',
                         password: ''
@@ -33,7 +45,7 @@ class SignIn extends Component {
                     this.props.history.push('/posts');
                 })
                 .catch(response => {
-                    alert('SORRY, something wrong!');
+                    alert('SORRY, something wrong! ' + response );
                 })
 
         }else{
@@ -69,9 +81,4 @@ class SignIn extends Component {
     }
 }
 
-export function mapStateToProps(store){
-    return {
-        ...store
-    }
-}
-export default connect(mapStateToProps, { login })(SignIn);
+export default connect(null, { login })(SignIn);

@@ -7,12 +7,9 @@ const api = axios.create({
     }
 });
 
-if( localStorage.getItem('token') ){
-    api.defaults.headers.common['Authorization'] = `Token ${localStorage.getItem('token')}`;
-}
-
 export function updateHeader(name, value){
     api.defaults.headers.common[name] = value;
 }
 
 export default api;
+

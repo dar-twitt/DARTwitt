@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import { logout, getPosts } from "../../../actions/blog.actions";
 import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
-import * as request from "../../../services/requests";
+import request from "../../../services/requests";
+import {updateHeader} from "../../../services/api";
 class Posts extends Component {
 
     state = {
@@ -12,25 +13,37 @@ class Posts extends Component {
     };
 
     componentDidMount() {
-        const { token } = this.props;
-        request.getPosts(token)
+        request.getPosts()
             .then(response => {
                 this.props.getPosts(response);
                 this.setState({
                     posts: this.props.posts
                 })
             })
-            .catch(response => {
-                alert('Something Wrong');
-            })
+            .catch(res => {
+                const token = localStorage.getItem('token');
+                if(token){
+                    updateHeader('Authorization',`Token ${token}`);
+                    request.getPosts()
+                        .then(response => {
+                            this.props.getPosts(response);
+                            this.setState({
+                                posts: this.props.posts
+                            })
+                        })
+                }else{
+                    alert('Something wrong!');
+                    this.props.history.push('/welcome');
+                }
+            });
     }
 
     handleLogoutClick = () => {
-        const { token } = this.props;
-        request.logout(token)
+        localStorage.clear();
+        request.logout()
             .then(response => {
-                localStorage.removeItem('token');
                 this.props.logout(response);
+                updateHeader('Authorization', '');
             })
             .catch(response => {
                 alert('Something wrong!');
@@ -45,7 +58,7 @@ class Posts extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="posts-main">
-                    <div className="posts-left"><LeftProfile/></div>
+                    <div className="posts-left">Left</div>
                     <div className="posts-center">
                         {
                             posts.map((post, index) => {
@@ -62,7 +75,6 @@ class Posts extends Component {
 
 export function mapStateToProps(store){
     return {
-        token: store.blog.token,
         posts: store.blog.posts
     }
 }

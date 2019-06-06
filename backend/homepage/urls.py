@@ -3,6 +3,7 @@ from homepage import views
 
 urlpatterns = [
     path('', views.ProfilesAPIView.as_view()),
+    path('own/', views.ProfileByUserAPIVIew.as_view()),
     path('<int:pk>/', views.ProfileAPIView.as_view()),
     path('<int:pk>/following/', views.ProfileFollowingAPIView.as_view()),
     path('<int:pk>/followers/', views.ProfileFollowersAPIView.as_view()),

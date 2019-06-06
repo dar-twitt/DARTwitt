@@ -1,12 +1,22 @@
 import React, {Component} from 'react';
 import './WelcomePage.css';
 import {connect} from "react-redux";
+import request from "../../../services/requests";
+import { getCurrentUser, updateToken } from "../../../actions/blog.actions";
+import {updateHeader} from "../../../services/api";
 
 class WelcomePage extends Component {
 
     componentDidMount() {
-        if(localStorage.getItem('token')){
-
+        const token = localStorage.getItem('token');
+        if(token){
+            request.getCurrentUser(token)
+                .then(response => {
+                    updateHeader('Authorization', `Token ${token}`);
+                    this.props.updateToken(token);
+                    this.props.history.push('/posts');
+                })
+                .catch();
         }
     }
 
@@ -41,4 +51,4 @@ export function mapStateToProps(state){
         token: state.token
     }
 }
-export default connect(mapStateToProps, {})(WelcomePage);
+export default connect(mapStateToProps, { getCurrentUser, updateToken })(WelcomePage);

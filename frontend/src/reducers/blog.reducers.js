@@ -1,4 +1,12 @@
-import {LOGIN, REGISTER_USER, CREATE_PROFILE, LOG_OUT, GET_POSTS} from '../actions/blog.actions';
+import {
+    LOGIN,
+    REGISTER_USER,
+    SAVE_PROFILE,
+    LOG_OUT,
+    GET_POSTS,
+    GET_CURRENT_USER,
+    UPDATE_TOKEN
+} from '../actions/blog.actions';
 
 const initialState = {};
 
@@ -13,12 +21,11 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 status: action.payload.status,
-                currentUser: action.payload.currentUser
             };
-        case CREATE_PROFILE:
+        case SAVE_PROFILE:
             return {
                 ...state,
-                profile: action.payload
+                profile: action.payload.profile
             };
         case LOG_OUT:
             return {
@@ -30,7 +37,17 @@ export default function(state=initialState, action){
         case GET_POSTS:
             return {
                 ...state,
-                posts: action.payload
+                posts: action.payload.posts
+            };
+        case GET_CURRENT_USER:
+            return {
+                ...state,
+                currentUser: action.payload.currentUser
+            };
+        case UPDATE_TOKEN:
+            return {
+                ...state,
+                token: action.payload.token
             };
         default:
             return state;
