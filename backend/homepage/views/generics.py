@@ -15,12 +15,12 @@ class ProfilesAPIView(generics.ListCreateAPIView):
         return serializer.save(user=self.request.user)
 
 
-class ProfileByUserAPIVIew(generics.RetrieveAPIView):
+class ProfileByUserAPIVIew(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        return Profile.objects.get(user=self.request.user)
+        return Profile.objects.filter(user=self.request.user)
 
 
 class ProfileAPIView(generics.RetrieveUpdateDestroyAPIView):

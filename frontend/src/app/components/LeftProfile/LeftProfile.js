@@ -1,9 +1,60 @@
 import React, {Component} from 'react';
 import './LeftProfile.css';
-import { withRouter } from "react-router";
-
+import request from "../../../services/requests";
+import {connect} from "react-redux";
+import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing } from "../../../actions/blog.actions";
+import {updateHeader} from "../../../services/api";
 
 class LeftProfile extends Component {
+    state = {
+        profile: {
+            name: '',
+            surname: '',
+            user: {
+                id: 0,
+                username: '',
+                email: '',
+            }
+        },
+        followers: [],
+        following: []
+    };
+
+    componentDidMount() {
+        request.getOwnProfile()
+            .then(response => {
+                this.props.saveMyProfile(response);
+            })
+            .catch(response => {
+                const token = localStorage.getItem('token');
+                if(token){
+                    updateHeader('Authorization',`Token ${token}`);
+                    request.getOwnProfile()
+                        .then(res =>{
+                            this.props.saveMyProfile(res);
+                        })
+                        .catch();
+                }else {
+                    alert(response);
+                }
+            });
+        if(this.props.profile){
+            request.getProfileFollowing(this.props.profile)
+                .then(response => {
+                    this.props.saveMyProfileFollowing(response);
+                })
+                .catch(response => {
+
+                });
+            request.getProfilesFollowers(this.props.profile)
+                .then(response => {
+                    this.props.saveMyProfileFollowers(response);
+                })
+                .catch(response => {
+
+                })
+        }
+    }
 
     goToProfile = () => {
         this.props.history.push("/profile");
@@ -12,7 +63,9 @@ class LeftProfile extends Component {
 
 
     render() {
-        const { post } = this.props;
+        let  { profile } = this.props;
+        console.log(profile);
+        if(!profile) profile = this.state.profile;
         return (
             <div>
                 <div className="profile-top">
@@ -23,10 +76,9 @@ class LeftProfile extends Component {
                 <div className="profile-bottom">
                     <div className="profile-info">
                         <div className="profile_fullname" onClick={this.goToProfile}>
-                            Bagdat Zhumagazieva
+                            {`${profile.name} ${profile.surname}`}
                         </div>
                         <div className="profile_username" onClick={this.goToProfile}>
-                            @BagdatZhumagaz1
                         </div>
                     </div>
                     <div className="profile_twittinfos">
@@ -36,11 +88,11 @@ class LeftProfile extends Component {
                         </div>
                         <div className="profile_twittinfos_twitt">
                             Followers <br/>
-                            0
+                            {this.state.followers.length}
                         </div>
                         <div className="profile_twittinfos_twitt">
                             Followings <br/>
-                            0
+                            {this.state.following.length}
                         </div>
                     </div>
                 </div>
@@ -49,6 +101,12 @@ class LeftProfile extends Component {
     }
 }
 
-// export default LeftProfile;
-export default withRouter(LeftProfile);
-// const LeftProfileWithRouter = withRouter(LeftProfile);
+export function mapStateToProps(state){
+    return{
+        profile: state.blog.myProfile,
+        followers: state.blog.myFollowers,
+        following: state.blog.myFollowing
+    };
+}
+
+export default connect(mapStateToProps, { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing })(LeftProfile);

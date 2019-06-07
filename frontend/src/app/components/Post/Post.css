@@ -1,0 +1,41 @@
+.PostComponent{
+    width: 100%;
+    background: #FFFFFF;
+    font-size: 18px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.post-user{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-sizing: border-box;
+    padding: 10px 5%;
+    width: 100%;
+    background: crimson;
+    color: #FFF;
+    font-weight: bold;
+}
+
+.post-content, .post-bottom{
+    width: 100%;
+    font-size: 16px;
+    color: #000;
+    box-sizing: border-box;
+    padding: 10px 5%;
+}
+
+.post-bottom{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.post-bottom-child{
+    margin-right: 20px;
+}
+
+.hr{
+    margin: 0;
+}
+
+

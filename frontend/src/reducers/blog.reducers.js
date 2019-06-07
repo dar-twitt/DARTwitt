@@ -5,7 +5,7 @@ import {
     LOG_OUT,
     GET_POSTS,
     GET_CURRENT_USER,
-    UPDATE_TOKEN
+    UPDATE_TOKEN, SAVE_MY_PROFILE, SAVE_MY_FOLLOWING, SAVE_MY_FOLLOWERS
 } from '../actions/blog.actions';
 
 const initialState = {};
@@ -48,6 +48,21 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 token: action.payload.token
+            };
+        case SAVE_MY_PROFILE:
+            return {
+                ...state,
+                myProfile: action.payload.myProfile
+            };
+        case SAVE_MY_FOLLOWING:
+            return {
+                ...state,
+                myFollowing: action.payload.myFollowing
+            };
+        case SAVE_MY_FOLLOWERS:
+            return {
+                ...state,
+                myFollowers: action.payload.myFollowers
             };
         default:
             return state;

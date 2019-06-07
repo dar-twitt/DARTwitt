@@ -6,10 +6,13 @@ import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
 import request from "../../../services/requests";
 import {updateHeader} from "../../../services/api";
+import './Posts.css';
+
 class Posts extends Component {
 
     state = {
-        posts: []
+        posts: [],
+        //isLoggedIn: false
     };
 
     componentDidMount() {
@@ -17,7 +20,8 @@ class Posts extends Component {
             .then(response => {
                 this.props.getPosts(response);
                 this.setState({
-                    posts: this.props.posts
+                    posts: this.props.posts,
+                    isLoggedIn: true
                 })
             })
             .catch(res => {
@@ -28,9 +32,11 @@ class Posts extends Component {
                         .then(response => {
                             this.props.getPosts(response);
                             this.setState({
-                                posts: this.props.posts
+                                posts: this.props.posts,
+                                isLoggedIn: true
                             })
                         })
+
                 }else{
                     alert('Something wrong!');
                     this.props.history.push('/welcome');
@@ -53,20 +59,25 @@ class Posts extends Component {
     render() {
         const { posts } = this.state;
         return (
-            <div className = "PostsComponent">
+            <div className = "PostsComponent ">
                 <nav className="posts-nav">
+                    <Link  className = "nav__link" to="/profile">Profile</Link>
+                    <div className="nav__link">
+                        <input type="text"/>
+                    </div>
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="posts-main">
-                    <div className="posts-left">Left</div>
-                    <div className="posts-center">
+                    <div className="posts-main-child posts-left"><LeftProfile/></div>
+                    <div className="posts-main-child posts-center">
                         {
                             posts.map((post, index) => {
                                 return <Post post={post} key = {index}/>
                             })
                         }
+                        <br/>
                     </div>
-                    <div className="posts-right">Right</div>
+                    {/*<div className="posts-main-child posts-right">Right</div>*/}
                 </div>
             </div>
         );
@@ -75,7 +86,7 @@ class Posts extends Component {
 
 export function mapStateToProps(store){
     return {
-        posts: store.blog.posts
+        posts: store.blog.posts,
     }
 }
 export default connect(mapStateToProps, { logout, getPosts })(Posts);

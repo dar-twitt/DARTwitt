@@ -73,3 +73,4 @@ class ProfileFollowOperation(APIView):
         follow = Follow.objects.get(profile1=profile1, profile2=profile2)
         follow.delete()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+

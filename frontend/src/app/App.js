@@ -31,7 +31,6 @@ class App extends Component {
             <Route exact path="/login" component = { SignIn }/>
             <Route exact path="/profile" component = { Profile }/>
             <Route exact path="/posts" component = { Posts }/>
-            <Route exact path="/leftprofile" component = { LeftProfile }/>
         </div>
     );
   }

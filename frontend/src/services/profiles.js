@@ -41,5 +41,5 @@ export function unfollowProfile(yourProfile, anotherProfile){
 }
 
 export function getOwnProfile() {
-    return api.get('own/');
+    return api.get('profile/own/');
 }

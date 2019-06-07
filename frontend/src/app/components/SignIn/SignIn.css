@@ -14,11 +14,13 @@
     color: crimson;
     font-size: 18px;
 }
+
 .nav__link{
     color: crimson;
     margin: 10px;
     text-decoration: none;
 }
+
 .signIn-main{
     width: 100%;
     height: calc(100vh - 50px);

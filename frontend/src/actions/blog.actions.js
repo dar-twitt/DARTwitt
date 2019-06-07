@@ -5,6 +5,9 @@ export const SAVE_PROFILE = 'CREATE_PROFILE';
 export const LOG_OUT = 'LOG_OUT';
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 export const UPDATE_TOKEN = 'UPDATE_TOKEN';
+export const SAVE_MY_PROFILE = 'SAVE_MY_PROFILE';
+export const SAVE_MY_FOLLOWING = 'SAVE_MY_FOLLOWING';
+export const SAVE_MY_FOLLOWERS = 'SAVE_MY_FOLLOWERS';
 
 export const login = response => dispatch => {
     dispatch({
@@ -73,4 +76,33 @@ export const updateToken = token => dispatch => {
             token: token
         }
     })
+};
+
+export const saveMyProfile = response => dispatch => {
+    dispatch({
+        type: SAVE_MY_PROFILE,
+        payload: {
+            myProfile: response.data[0]
+        }
+    });
+};
+
+
+export const saveMyProfileFollowing = response => dispatch => {
+    dispatch({
+        type: SAVE_MY_FOLLOWING,
+        payload: {
+            myFollowing: response.data
+        }
+    });
+};
+
+
+export const saveMyProfileFollowers = response => dispatch => {
+    dispatch({
+        type: SAVE_MY_FOLLOWERS,
+        payload: {
+            myFollowers: response.data
+        }
+    });
 };
