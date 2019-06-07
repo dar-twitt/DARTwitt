@@ -5,7 +5,7 @@ import './ImageUpload.css';
 class ImageUpload extends Component{
 
     handleImageChange = event => {
-        let file = new FormData( event.target.files[0] );
+        let file = new FormData(event.target.files[0]);
     };
 
     render(){

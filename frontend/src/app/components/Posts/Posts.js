@@ -68,7 +68,7 @@ class Posts extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="posts-main">
-                    <div className="posts-main-child posts-left"><LeftProfile/></div>
+                    {/*<div className="posts-main-child posts-left"><LeftProfile/></div>*/}
                     <div className="posts-main-child posts-center">
                         {
                             posts.map((post, index) => {

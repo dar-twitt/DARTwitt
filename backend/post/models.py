@@ -3,7 +3,7 @@ from homepage.models import Profile
 
 
 class Post(models.Model):
-    image = models.ImageField(default=None, null=True)
+    image = models.ImageField(upload_to='images', default=None, null=True)
     text = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now=True)
     repost = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None, null=True, related_name='reposts')

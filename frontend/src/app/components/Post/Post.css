@@ -38,4 +38,39 @@
     margin: 0;
 }
 
+.image__wrapper{
+    width: 30%;
+    min-height: 100px;
+}
 
+.post-content-text{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 10px;
+    border-radius: 15px;
+    background: #eee;
+    margin: 10px 0;
+}
+
+.liked{
+    color: crimson;
+}
+
+.ico:hover{
+    color: #cc2121;
+}
+
+.comments{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 5%;
+    margin: 10px 0;
+}
+
+.comments-content{
+    width: 100%;
+    background: #eee;
+    border-radius: 15px;
+    padding: 10px 5%;
+    box-sizing: border-box;
+}
