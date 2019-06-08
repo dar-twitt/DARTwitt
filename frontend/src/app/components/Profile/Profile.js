@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import './Profile.css';
 import LeftProfile from "../LeftProfile/LeftProfile";
-
+import '../LeftProfile/LeftProfile.css';
 class Profile extends Component {
 
     state = {
@@ -22,10 +22,11 @@ class Profile extends Component {
                 </nav>
                 <div className="profile-main">
                     <div className="profile-main-child profile-left"><LeftProfile/></div>
-                    <div className="profile-main-child profile-main">
-
+                    <div className="profile-main-child profile-settings">
+                        <button onClick={}>Edit Profile</button>
                     </div>
-
+                    <div className="profile-main-child profile-main">
+                    </div>
                 </div>
             </div>
         );
