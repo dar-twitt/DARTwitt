@@ -4,6 +4,11 @@ export function getProfilesPost(profile, post){
     return api.get(`profile/${profile.id}/posts/${post.id}/`);
 }
 
+
+export function getProfilesPosts(profile){
+    return api.get(`profile/${profile.id}/posts/`);
+}
+
 export function createProfilesPost(profile, post){
     return api.post(`profile/${profile.id}/posts/`, post);
 }

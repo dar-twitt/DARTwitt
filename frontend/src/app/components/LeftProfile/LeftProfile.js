@@ -2,124 +2,105 @@ import React, {Component} from 'react';
 import './LeftProfile.css';
 import request from "../../../services/requests";
 import {connect} from "react-redux";
-import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing } from "../../../actions/blog.actions";
+import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getPosts } from "../../../actions/blog.actions";
 import api, {updateHeader} from "../../../services/api";
 
 class LeftProfile extends Component {
     state = {
-        profile: {
-            name: '',
-            surname: '',
-            user: {
-                id: 0,
-                username: '',
-                email: '',
-            }
-        },
+        following: [],
         followers: [],
-        following: []
+        posts: []
     };
-
-    componentDidMount() {
+   componentDidMount() {
        if(api.defaults.headers.common['Authorization']){
-           request.getOwnProfile()
+           request.getProfileFollowing(this.props.profile)
                .then(response => {
-                   this.props.saveMyProfile(response);
-                   if(this.props.profile) {
-                       request.getProfileFollowing(this.props.profile)
-                           .then(response => {
-                               this.props.saveMyProfileFollowing(response);
-                           })
-                           .catch(response => {
-
-                           });
-                       request.getProfilesFollowers(this.props.profile)
-                           .then(response => {
-                               this.props.saveMyProfileFollowers(response);
-                           })
-                           .catch(response => {
-
-                           })
-                   }
+                   this.props.saveMyProfileFollowing(response);
                })
-               .catch(response => {
-
-               });
+               .catch();
+           request.getProfilesFollowers(this.props.profile)
+               .then(response => {
+                   this.props.saveMyProfileFollowers(response);
+               })
+               .catch();
+           request.getProfilesPosts(this.props.profile)
+               .then(response => {
+                   this.props.getPosts(response);
+               })
+               .catch();
        }else{
            const token = localStorage.getItem('token');
            if(token){
-               updateHeader('Authorization',`Token ${token}`);
-               request.getOwnProfile()
-                   .then(res =>{
-                       this.props.saveMyProfile(res);
+               updateHeader('Authorization', `Token ${token}`);
+               request.getProfileFollowing(this.props.profile)
+                   .then(response => {
+                       this.props.saveMyProfileFollowing(response);
                    })
                    .catch();
-           }else {
+               request.getProfilesFollowers(this.props.profile)
+                   .then(response => {
+                       this.props.saveMyProfileFollowers(response);
+                   })
+                   .catch();
+               request.getProfilesPosts(this.props.profile)
+                   .then(response => {
+                       this.props.getPosts(response);
+                   })
+                   .catch();
+           }else{
+
            }
        }
+   }
 
-        }
+   componentDidUpdate(prevProps, prevState, snapshot) {
+       if(prevProps !== this.props){
+           this.setState({
+               posts: this.props.posts || [],
+               following: this.props.following || [],
+               followers: this.props.followers || []
+           })
+       }
+   }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps !== this.props){
-            this.setState({
-                profile: this.props.profile || this.state.profile,
-                followers: this.props.followers || [],
-                followings: this.props.followings || []
-            });
-        }
-    }
-
-    goToProfile = () => {
-        this.props.history.push("/profile");
-        console.log(this.props);
-    };
-
-
-    render(){
-        let  { profile } = this.state;
-        return (
-            <div>
-                <div className="profile-data">
-                    <div className="profile_avatar">
-                        <div className="profile_addpicture">+</div>
-                    </div>
-                    <div className="profile-info">
-                        <div className="profile_fullname" onClick={this.goToProfile}>
-                            {`${profile.name} ${profile.surname}`}
-                        </div>
-                        <div className="profile_username" onClick={this.goToProfile}>
-                        </div>
-                    </div>
-                    <div className="profile_twittinfos">
-                        <div className="profile_twittinfos_twitt">
-                            Twitts <br/>
-                            0
-                        </div>
-                        <div className="profile_twittinfos_twitt">
-                            Followers <br/>
-                            { this.state.followers.length}
-                        </div>
-                        <div className="profile_twittinfos_twitt">
-                            Followings <br/>
-                            {this.state.following.length}
-                        </div>
-                    </div>
-                    <div className="profile_login">
-                        {`@${profile.user.username}`}
-                    </div>
+    render() {
+       const { profile } = this.props;
+       return (
+           <div className="LeftProfileComponent">
+                <div className="left-profile-photo">
+                    {
+                        profile.avatar && <img src={profile.avatar} className="left-profile-avatar" alt=""/>
+                    }
+                    {
+                        !profile.avatar && <div className="left-profile-avatar">No Photo</div>
+                    }
                 </div>
-            </div>
-        );
-    }
+                <div className="left-profile-info">
+                    <span>{`${profile.name} ${profile.surname} @${profile.user.username}`}</span>
+                </div>
+                <table className="left-profile-data">
+                    <tr>
+                        <td>Tweets</td>
+                        <td>Following</td>
+                        <td>Followers</td>
+                    </tr>
+                    <tr>
+                        <td>{ this.state.posts.length }</td>
+                        <td>{ this.state.following.length }</td>
+                        <td>{ this.state.followers.length }</td>
+                    </tr>
+                </table>
+           </div>
+       );
+   }
 }
 
-export function mapStateToProps(state){
+export function mapStateToProps(store){
     return{
-        profile: state.blog.myProfile,
-        followers: state.blog.myFollowers,
-        following: state.blog.myFollowing
+        followers: store.blog.myFollowers,
+        following: store.blog.myFollowing,
+        posts: store.blog.posts
     };
 }
 
-export default connect(mapStateToProps, { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing })(LeftProfile);
+export default connect(mapStateToProps, { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getPosts })(LeftProfile);
