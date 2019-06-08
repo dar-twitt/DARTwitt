@@ -3,7 +3,7 @@ import './LeftProfile.css';
 import request from "../../../services/requests";
 import {connect} from "react-redux";
 import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing } from "../../../actions/blog.actions";
-import {updateHeader} from "../../../services/api";
+import api, {updateHeader} from "../../../services/api";
 
 class LeftProfile extends Component {
     state = {
@@ -21,38 +21,52 @@ class LeftProfile extends Component {
     };
 
     componentDidMount() {
-        request.getOwnProfile()
-            .then(response => {
-                this.props.saveMyProfile(response);
-            })
-            .catch(response => {
-                const token = localStorage.getItem('token');
-                if(token){
-                    updateHeader('Authorization',`Token ${token}`);
-                    request.getOwnProfile()
-                        .then(res =>{
-                            this.props.saveMyProfile(res);
-                        })
-                        .catch();
-                }else {
-                    alert(response);
-                }
+       if(api.defaults.headers.common['Authorization']){
+           request.getOwnProfile()
+               .then(response => {
+                   this.props.saveMyProfile(response);
+                   if(this.props.profile) {
+                       request.getProfileFollowing(this.props.profile)
+                           .then(response => {
+                               this.props.saveMyProfileFollowing(response);
+                           })
+                           .catch(response => {
+
+                           });
+                       request.getProfilesFollowers(this.props.profile)
+                           .then(response => {
+                               this.props.saveMyProfileFollowers(response);
+                           })
+                           .catch(response => {
+
+                           })
+                   }
+               })
+               .catch(response => {
+
+               });
+       }else{
+           const token = localStorage.getItem('token');
+           if(token){
+               updateHeader('Authorization',`Token ${token}`);
+               request.getOwnProfile()
+                   .then(res =>{
+                       this.props.saveMyProfile(res);
+                   })
+                   .catch();
+           }else {
+           }
+       }
+
+        }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps !== this.props){
+            this.setState({
+                profile: this.props.profile || this.state.profile,
+                followers: this.props.followers || [],
+                followings: this.props.followings || []
             });
-        if(this.props.profile){
-            request.getProfileFollowing(this.props.profile)
-                .then(response => {
-                    this.props.saveMyProfileFollowing(response);
-                })
-                .catch(response => {
-
-                });
-            request.getProfilesFollowers(this.props.profile)
-                .then(response => {
-                    this.props.saveMyProfileFollowers(response);
-                })
-                .catch(response => {
-
-                })
         }
     }
 
@@ -62,18 +76,14 @@ class LeftProfile extends Component {
     };
 
 
-    render() {
-        let  { profile } = this.props;
-        console.log(profile);
-        if(!profile) profile = this.state.profile;
+    render(){
+        let  { profile } = this.state;
         return (
             <div>
-                <div className="profile-top">
+                <div className="profile-data">
                     <div className="profile_avatar">
                         <div className="profile_addpicture">+</div>
                     </div>
-                </div>
-                <div className="profile-bottom">
                     <div className="profile-info">
                         <div className="profile_fullname" onClick={this.goToProfile}>
                             {`${profile.name} ${profile.surname}`}
@@ -88,12 +98,15 @@ class LeftProfile extends Component {
                         </div>
                         <div className="profile_twittinfos_twitt">
                             Followers <br/>
-                            {this.state.followers.length}
+                            { this.state.followers.length}
                         </div>
                         <div className="profile_twittinfos_twitt">
                             Followings <br/>
                             {this.state.following.length}
                         </div>
+                    </div>
+                    <div className="profile_login">
+                        {`@${profile.user.username}`}
                     </div>
                 </div>
             </div>
