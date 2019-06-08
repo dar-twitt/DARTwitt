@@ -23,7 +23,7 @@ class Profile extends Component {
                 <div className="profile-main">
                     <div className="profile-main-child profile-left"><LeftProfile/></div>
                     <div className="profile-main-child profile-settings">
-                        <button onClick={}>Edit Profile</button>
+                        {/*<button onClick={}>Edit Profile</button>*/}
                     </div>
                     <div className="profile-main-child profile-main">
                     </div>
