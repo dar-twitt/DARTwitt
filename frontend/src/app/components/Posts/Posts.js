@@ -6,61 +6,70 @@ import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
 import AddPostComponent from '../AddPostComponent/AddPostComponent';
 import request from "../../../services/requests";
-import {updateHeader} from "../../../services/api";
+import api, {updateHeader} from "../../../services/api";
 import './Posts.css';
 
 class Posts extends Component {
 
     state = {
         posts: [],
-        //isLoggedIn: false
+        comments: []
     };
 
     componentDidMount() {
-        request.getPosts()
-            .then(response => {
-                this.props.getPosts(response);
-                this.setState({
-                    posts: this.props.posts,
-                    isLoggedIn: true
-                })
-            })
-            .catch(res => {
-                const token = localStorage.getItem('token');
-                if(token){
-                    updateHeader('Authorization',`Token ${token}`);
+        console.log(api);
+        if(api.defaults.headers.common["Authorization"]){
+
+            request.getOwnProfile()
+                .then(response => {
+                    this.props.saveMyProfile(response);
                     request.getPosts()
-                        .then(response => {
-                            this.props.getPosts(response);
+                        .then(res => {
+                            this.props.getPosts(res);
                             this.setState({
                                 posts: this.props.posts,
                                 isLoggedIn: true
                             })
                         })
+                        .catch(res => {
 
-                }else{
-                    alert('Something wrong!');
-                    this.props.history.push('/login');
-                }
+                        });
+                })
+                .catch(response => {
+
+                });
+        }else {
+            const token = localStorage.getItem('token');
+            if(token){
+                updateHeader('Authorization',`Token ${token}`);
+                request.getOwnProfile()
+                    .then(response => {
+                        this.props.saveMyProfile(response);
+                        request.getPosts()
+                            .then(response => {
+                                this.props.getPosts(response);
+                                this.setState({
+                                    posts: this.props.posts,
+                                    isLoggedIn: true
+                                })
+                            });
+                    })
+                    .catch();
+            }else{
+                alert('Something wrong!');
+                this.props.history.push('/login');
+            }
+        }
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.posts !== this.props.posts){
+            this.setState({
+                posts: this.props.posts,
+                comments: this.props.comments || []
             });
-        request.getOwnProfile()
-            .then(response => {
-                this.props.saveMyProfile(response);
-            })
-            .catch(response => {
-                const token = localStorage.getItem('token');
-                if(token){
-                    updateHeader('Authorization',`Token ${token}`);
-                    request.getOwnProfile()
-                        .then(response => {
-                            this.props.saveMyProfile(response);
-                        })
-                        .catch();
-                }else{
-                    alert('Something wrong!');
-                    this.props.history.push('/login');
-                }
-            });
+        }
     }
 
     handleLogoutClick = () => {
@@ -92,7 +101,8 @@ class Posts extends Component {
                         <AddPostComponent/>
                         {
                             posts.map((post, index) => {
-                                return <Post post={post} key = {index}/>
+                                console.log(post, this.props.profile);
+                                return <Post post={post} key = {index} profile={this.props.profile}/>
                             })
                         }
                         <br/>
@@ -107,6 +117,8 @@ class Posts extends Component {
 export function mapStateToProps(store){
     return {
         posts: store.blog.posts,
+        comments: store.blog.comments,
+        profile: store.blog.myProfile
     }
 }
 export default connect(mapStateToProps, { logout, getPosts, saveMyProfile })(Posts);

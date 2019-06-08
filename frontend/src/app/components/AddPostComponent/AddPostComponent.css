@@ -19,6 +19,8 @@
 .add-input{
     width: 70%;
     height: 60px;
+    border: 1px solid #eeeeee;
+    border-radius: 15px;
 }
 
 .add-post__bttn{

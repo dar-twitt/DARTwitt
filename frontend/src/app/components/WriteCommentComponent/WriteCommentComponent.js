@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import request from '../../../services/requests';
-
+import { getPosts, getComments } from '../../../actions/blog.actions';
+import './WriteCommentComponent.css';
 class WriteCommentComponent extends Component {
     state = {
         comment: '',
@@ -17,7 +18,18 @@ class WriteCommentComponent extends Component {
         const { post } = this.props;
         request.createPostsComment(post, this.state.comment)
             .then(response => {
-                
+                request.getPosts()
+                    .then(response => {
+                        this.props.getPosts(response);
+                        this.setState({
+                            comment: ''
+                        });
+                    })
+                    .catch();
+                request.getPostsComments(post)
+                    .then(response => {
+                        this.props.getComments(response);
+                    });
             })
             .catch();
     };
@@ -31,7 +43,7 @@ class WriteCommentComponent extends Component {
                        value={this.state.comment}
                        onChange={this.handleOnChange}
                 />
-                <button className="comment-send">Comment</button>
+                <button className="comment-send" onClick={this.handleSendComment}>Comment</button>
             </div>
         );
     }
@@ -41,4 +53,4 @@ export function mapStateToProps(store){
         profile: store.blog.myProfile
     }
 }
-export default connect(mapStateToProps, {})(WriteCommentComponent);
+export default connect(mapStateToProps, { getPosts, getComments })(WriteCommentComponent);
