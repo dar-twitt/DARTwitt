@@ -27,7 +27,6 @@ class Posts extends Component {
     componentDidMount() {
         console.log(api);
         if(api.defaults.headers.common["Authorization"]){
-
             request.getOwnProfile()
                 .then(response => {
                     this.props.saveMyProfile(response);
