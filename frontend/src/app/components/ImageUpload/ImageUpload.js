@@ -6,11 +6,10 @@ import { saveImage } from "../../../actions/blog.actions";
 class ImageUpload extends Component{
 
     handleImageChange = event => {
-        let file = new FormData();
-        console.log(event.target.files[0]);
-        file.append('image', event.target.files[0]);
-        console.log(file.get('image'));
-        this.props.saveImage(file);
+        // let file = new FormData();
+        // console.log(event.target.files[0]);
+        // file.append('image', event.target.files[0], event.target.files[0].name);
+        this.props.saveImage(event.target.files[0]);
     };
 
     render(){

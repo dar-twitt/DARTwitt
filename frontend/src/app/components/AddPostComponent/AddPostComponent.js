@@ -17,13 +17,18 @@ class AddPostComponent extends Component {
     }
 
     handleOnTweetClick = () => {
-        const post = {
-            text: this.state.text,
-            image: this.props.file,
-            created_at: this.formatDate(Date.now())
-        };
-
-        updateHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // const post = {
+        //     text: this.state.text,
+        //     image: this.props.file,
+        //     created_at: this.formatDate(Date.now())
+        // };
+        const post = new FormData();
+        if(this.props.file){
+            post.append('image', this.props.file, this.props.file.name)
+        }
+        post.append('text', this.state.text);
+        post.append('created_at', this.formatDate(Date.now()));
+        updateHeader('Content-Type', 'multipart/form-data');
         // updateHeader('Content-Length', this.props.file.length);
         request.createProfilesPost(this.props.profile, post)
             .then(response => {
