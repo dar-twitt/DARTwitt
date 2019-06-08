@@ -8,6 +8,7 @@ export const UPDATE_TOKEN = 'UPDATE_TOKEN';
 export const SAVE_MY_PROFILE = 'SAVE_MY_PROFILE';
 export const SAVE_MY_FOLLOWING = 'SAVE_MY_FOLLOWING';
 export const SAVE_MY_FOLLOWERS = 'SAVE_MY_FOLLOWERS';
+export const SAVE_IMAGE = 'SAVE_IMAGE';
 
 export const login = response => dispatch => {
     dispatch({
@@ -24,7 +25,6 @@ export const logout = response => dispatch => {
 };
 
 export const getPosts = response => dispatch => {
-    console.log(response.data);
     dispatch({
         type: GET_POSTS,
         payload: {
@@ -105,4 +105,13 @@ export const saveMyProfileFollowers = response => dispatch => {
             myFollowers: response.data
         }
     });
+};
+
+export const saveImage = file => dispatch => {
+    dispatch({
+        type: SAVE_IMAGE,
+        payload: {
+            file: file
+        }
+    })
 };

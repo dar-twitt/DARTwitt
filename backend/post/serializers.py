@@ -4,6 +4,7 @@ from post.models import Post, Comment, Like
 
 
 class PostSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     image = serializers.ImageField(required=False)
     created_at = serializers.DateTimeField(required=False)
     repost = ProfileSerializer(required=False)
@@ -15,6 +16,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     created_at = serializers.DateTimeField(required=False)
     owner = ProfileSerializer(required=False)
     post = PostSerializer(required=False)
@@ -30,6 +32,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class LikeSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     post = PostSerializer(required=False)
     # comment = CommentSerializer(required=False)
     owner = ProfileSerializer(required=False)

@@ -5,7 +5,7 @@ import {
     LOG_OUT,
     GET_POSTS,
     GET_CURRENT_USER,
-    UPDATE_TOKEN, SAVE_MY_PROFILE, SAVE_MY_FOLLOWING, SAVE_MY_FOLLOWERS
+    UPDATE_TOKEN, SAVE_MY_PROFILE, SAVE_MY_FOLLOWING, SAVE_MY_FOLLOWERS, SAVE_IMAGE
 } from '../actions/blog.actions';
 
 const initialState = {};
@@ -63,6 +63,11 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 myFollowers: action.payload.myFollowers
+            };
+        case SAVE_IMAGE:
+            return {
+                ...state,
+                file: action.payload.file
             };
         default:
             return state;

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import { connect } from "react-redux";
-import { logout, getPosts } from "../../../actions/blog.actions";
+import { logout, getPosts, saveMyProfile } from "../../../actions/blog.actions";
 import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
+import AddPostComponent from '../AddPostComponent/AddPostComponent';
 import request from "../../../services/requests";
 import {updateHeader} from "../../../services/api";
 import './Posts.css';
@@ -39,7 +40,25 @@ class Posts extends Component {
 
                 }else{
                     alert('Something wrong!');
-                    this.props.history.push('/welcome');
+                    this.props.history.push('/login');
+                }
+            });
+        request.getOwnProfile()
+            .then(response => {
+                this.props.saveMyProfile(response);
+            })
+            .catch(response => {
+                const token = localStorage.getItem('token');
+                if(token){
+                    updateHeader('Authorization',`Token ${token}`);
+                    request.getOwnProfile()
+                        .then(response => {
+                            this.props.saveMyProfile(response);
+                        })
+                        .catch();
+                }else{
+                    alert('Something wrong!');
+                    this.props.history.push('/login');
                 }
             });
     }
@@ -70,6 +89,7 @@ class Posts extends Component {
                 <div className="posts-main">
                     {/*<div className="posts-main-child posts-left"><LeftProfile/></div>*/}
                     <div className="posts-main-child posts-center">
+                        <AddPostComponent/>
                         {
                             posts.map((post, index) => {
                                 return <Post post={post} key = {index}/>
@@ -89,4 +109,4 @@ export function mapStateToProps(store){
         posts: store.blog.posts,
     }
 }
-export default connect(mapStateToProps, { logout, getPosts })(Posts);
+export default connect(mapStateToProps, { logout, getPosts, saveMyProfile })(Posts);

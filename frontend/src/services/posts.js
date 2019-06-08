@@ -4,6 +4,9 @@ export function getProfilesPost(profile, post){
     return api.get(`profile/${profile.id}/posts/${post.id}/`);
 }
 
+export function createProfilesPost(profile, post){
+    return api.post(`profile/${profile.id}/posts/`, post);
+}
 export function updateProfilesPost(profile, post){
     return api.put(`profile/${profile.id}/posts/${post.id}/`, {
         text: post.text

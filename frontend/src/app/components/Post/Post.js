@@ -122,7 +122,7 @@ class Post extends Component {
                 <div className="post-user">{`${post.owner.name} ${post.owner.surname} @${post.owner.user.username}`}</div>
                 <div className="post-content">
                     {
-                        post.image && <img src={post.image} alt="" className="image__wrapper"/>
+                        post.image && <img src={post.image} alt="" className="post_image__wrapper"/>
                     }
                     <div className="post-content-text">{`${post.text}`}</div>
                 </div>
@@ -151,7 +151,7 @@ class Post extends Component {
 
 export function mapStateToProps(store){
     return {
-        profile: store.blog.profile
+        profile: store.blog.myProfile
     };
 }
 

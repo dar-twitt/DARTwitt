@@ -5,7 +5,7 @@ from homepage.models import Profile, Follow
 
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    avatar = serializers.CharField(required=False)
+    avatar = serializers.ImageField(required=False)
     bio = serializers.CharField(required=False)
     created_at = serializers.DateTimeField(required=False)
     following = UserSerializer(required=False)
