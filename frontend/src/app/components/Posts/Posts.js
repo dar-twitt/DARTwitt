@@ -13,7 +13,15 @@ class Posts extends Component {
 
     state = {
         posts: [],
-        comments: []
+        comments: [],
+        profile:{
+            avatar: undefined,
+            name: '',
+            surname: '',
+            user: {
+                username: ''
+            }
+        }
     };
 
     componentDidMount() {
@@ -66,7 +74,8 @@ class Posts extends Component {
         if(prevProps.posts !== this.props.posts){
             this.setState({
                 posts: this.props.posts,
-                comments: this.props.comments || []
+                comments: this.props.comments || [],
+                profile: this.props.profile || this.state.profile
             });
         }
     }
@@ -95,13 +104,13 @@ class Posts extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="posts-main">
-                    {/*<div className="posts-main-child posts-left"><LeftProfile/></div>*/}
+                    <div className="posts-main-child posts-left"><LeftProfile profile={this.state.profile}/></div>
                     <div className="posts-main-child posts-center">
                         <AddPostComponent/>
                         {
                             posts.map((post, index) => {
                                 console.log(post, this.props.profile);
-                                return <Post post={post} key = {index} profile={this.props.profile}/>
+                                return <Post post={post} key = {index} profile={this.state.profile}/>
                             })
                         }
                         <br/>

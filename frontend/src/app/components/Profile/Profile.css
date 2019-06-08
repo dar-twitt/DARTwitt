@@ -34,9 +34,11 @@
     align-items: flex-start;
 }
 .profile-left{
-    width: 60%;
+    width: 300px;
+    height: 300px;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 .profile-main-child{
     display: flex;
