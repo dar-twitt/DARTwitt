@@ -9,7 +9,7 @@ export const SAVE_MY_PROFILE = 'SAVE_MY_PROFILE';
 export const SAVE_MY_FOLLOWING = 'SAVE_MY_FOLLOWING';
 export const SAVE_MY_FOLLOWERS = 'SAVE_MY_FOLLOWERS';
 export const SAVE_IMAGE = 'SAVE_IMAGE';
-
+export const GET_POSTS_COMMENTS = 'GET_POST_COMMENTS';
 export const login = response => dispatch => {
     dispatch({
         type: LOGIN,
@@ -114,4 +114,13 @@ export const saveImage = file => dispatch => {
             file: file
         }
     })
+};
+
+export const getComments = response => dispatch => {
+    dispatch({
+        type: GET_POSTS_COMMENTS,
+        payload: {
+            comments: response.data
+        }
+    });
 };

@@ -4,6 +4,12 @@ from homepage.serializers import ProfileSerializer
 from homepage.models import Profile, Follow
 from user.serializers import UserSerializer
 from post.serializers import PostSerializer
+from django import forms
+
+
+class ImageUploadForm(forms.Form):
+    """Image upload form."""
+    image = forms.ImageField()
 
 
 class ProfilesAPIView(generics.ListCreateAPIView):
@@ -38,7 +44,13 @@ class ProfilesPostsAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         profile = Profile.objects.get(id=self.kwargs['pk'])
-        return serializer.save(owner=profile)
+        form = ImageUploadForm(self.request.POST, self.request.FILES)
+        if form.is_valid():
+            image = form.cleaned_data['image']
+            return serializer.save(owner=profile, image=image)
+    #         return HttpResponse('image upload success')
+    #
+    # return HttpResponseForbidden('allowed only via POST')
 
 
 class ProfileFollowingAPIView2(generics.ListAPIView):

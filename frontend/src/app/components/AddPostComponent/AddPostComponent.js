@@ -5,6 +5,8 @@ import './AddPostComponent.css';
 import request from '../../../services/requests';
 import { getPosts } from "../../../actions/blog.actions";
 import * as moment from 'moment';
+import { updateHeader } from "../../../services/api";
+
 class AddPostComponent extends Component {
     state = {
         text: ''
@@ -17,9 +19,12 @@ class AddPostComponent extends Component {
     handleOnTweetClick = () => {
         const post = {
             text: this.state.text,
-            image: this.props.file.get('image'),
+            image: this.props.file,
             created_at: this.formatDate(Date.now())
         };
+
+        updateHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // updateHeader('Content-Length', this.props.file.length);
         request.createProfilesPost(this.props.profile, post)
             .then(response => {
                 request.getPosts()
@@ -41,7 +46,7 @@ class AddPostComponent extends Component {
         return (
             <div className = "AddPostComponent">
                 <input type="text" placeholder="what's happening?" className="add-input" value={this.state.text} onChange={this.handleOnChange}/>
-                <div class = "add-image">
+                <div className = "add-image">
                     <ImageUpload/>
                 </div>
                 <button className="add-post__bttn" onClick={this.handleOnTweetClick}>Tweet</button>
