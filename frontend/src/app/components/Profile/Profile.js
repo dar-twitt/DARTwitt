@@ -38,10 +38,7 @@ class Profile extends Component {
                 <div className="profile-main">
                     <div className="profile-main-child profile-left"><LeftProfile profile={this.props.profile}/></div>
                     <div className="profile-main-child profile-settings">
-<<<<<<< HEAD
                         {/*<button onClick={}>Edit Profile</button>*/}
-=======
->>>>>>> 62b2342540772c88c77ccf9ad010015652a2869f
                     </div>
                     <div className="profile-main-child profile-main">
                     </div>
