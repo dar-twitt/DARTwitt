@@ -33,7 +33,7 @@
     padding: 50px 5%;
     box-sizing: border-box;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: flex-start;
 }
 

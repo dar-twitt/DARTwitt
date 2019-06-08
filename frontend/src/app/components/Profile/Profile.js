@@ -5,8 +5,9 @@ import LeftProfile from "../LeftProfile/LeftProfile";
 import '../LeftProfile/LeftProfile.css';
 import api from '../../../services/api';
 import request from '../../../services/requests';
-import { saveMyProfile } from "../../../actions/blog.actions";
+import { saveMyProfile, getPosts } from "../../../actions/blog.actions";
 import {connect} from "react-redux";
+import Post from '../Post/Post';
 
 class Profile extends Component {
 
@@ -19,13 +20,29 @@ class Profile extends Component {
             request.getOwnProfile()
                 .then( response => {
                     this.props.saveMyProfile(response);
+                    request.getProfilesPosts(this.props.profile)
+                        .then(res => {
+                            this.props.getPosts(res);
+                        })
+                        .catch();
                 })
                 .catch();
+
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props !== prevProps){
+            this.setState({
+                posts: this.props.posts || [],
+                // profile: this.props.profile || this.state.profile
+            });
         }
     }
 
     render() {
-        const {profile} = this.props;
+        const { profile } = this.props;
+        const { posts } = this.state;
         return (
             <div className="ProfileComponent">
                 <nav className="profile-nav">
@@ -36,11 +53,20 @@ class Profile extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="profile-main">
-                    <div className="profile-main-child profile-left"><LeftProfile profile={this.props.profile}/></div>
+                    <div className="profile-main-child profile-left"><LeftProfile/></div>
+                    {/*<div className="profile-main-child profile-settings">*/}
+                    {/*</div>*/}
+
                     <div className="profile-main-child profile-settings">
                         {/*<button onClick={}>Edit Profile</button>*/}
                     </div>
+
                     <div className="profile-main-child profile-main">
+                        {
+                            posts.map((post, index) => {
+                                return <Post post={post} key={index}/>
+                            })
+                        }
                     </div>
                 </div>
             </div>
@@ -49,7 +75,7 @@ class Profile extends Component {
 }
 export function mapStateToProps(store){
     return {
-        profile: store.blog.myProfile
+        profile: store.blog.myProfile,
     };
 }
-export default connect(mapStateToProps, { saveMyProfile })(Profile);
+export default connect(mapStateToProps, { saveMyProfile, getPosts })(Profile);

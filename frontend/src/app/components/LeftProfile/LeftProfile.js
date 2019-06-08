@@ -9,44 +9,50 @@ class LeftProfile extends Component {
     state = {
         following: [],
         followers: [],
-        posts: []
+        posts: [],
+        profile:{
+            avatar: undefined,
+            name: '',
+            surname: '',
+            user: {
+                username: ''
+            }
+        }
     };
+
+    getData = () => {
+        request.getOwnProfile()
+            .then(res => {
+                this.props.saveMyProfile(res);
+                if(this.props.profile){
+                    request.getProfileFollowing(this.props.profile)
+                        .then(response => {
+                            this.props.saveMyProfileFollowing(response);
+                        })
+                        .catch();
+                    request.getProfilesFollowers(this.props.profile)
+                        .then(response => {
+                            this.props.saveMyProfileFollowers(response);
+                        })
+                        .catch();
+                    request.getProfilesPosts(this.props.profile)
+                        .then(response => {
+                            this.props.getPosts(response);
+                        })
+                        .catch();
+                }
+            });
+    };
+
    componentDidMount() {
+
        if(api.defaults.headers.common['Authorization']){
-           request.getProfileFollowing(this.props.profile)
-               .then(response => {
-                   this.props.saveMyProfileFollowing(response);
-               })
-               .catch();
-           request.getProfilesFollowers(this.props.profile)
-               .then(response => {
-                   this.props.saveMyProfileFollowers(response);
-               })
-               .catch();
-           request.getProfilesPosts(this.props.profile)
-               .then(response => {
-                   this.props.getPosts(response);
-               })
-               .catch();
+            this.getData();
        }else{
            const token = localStorage.getItem('token');
            if(token){
                updateHeader('Authorization', `Token ${token}`);
-               request.getProfileFollowing(this.props.profile)
-                   .then(response => {
-                       this.props.saveMyProfileFollowing(response);
-                   })
-                   .catch();
-               request.getProfilesFollowers(this.props.profile)
-                   .then(response => {
-                       this.props.saveMyProfileFollowers(response);
-                   })
-                   .catch();
-               request.getProfilesPosts(this.props.profile)
-                   .then(response => {
-                       this.props.getPosts(response);
-                   })
-                   .catch();
+               this.getData();
            }else{
 
            }
@@ -56,15 +62,16 @@ class LeftProfile extends Component {
    componentDidUpdate(prevProps, prevState, snapshot) {
        if(prevProps !== this.props){
            this.setState({
+               profile: this.props.profile || this.state.profile,
                posts: this.props.posts || [],
                following: this.props.following || [],
                followers: this.props.followers || []
-           })
+           });
        }
    }
 
     render() {
-       const { profile } = this.props;
+       const { profile } = this.state;
        return (
            <div className="LeftProfileComponent">
                 <div className="left-profile-photo">
@@ -99,7 +106,8 @@ export function mapStateToProps(store){
     return{
         followers: store.blog.myFollowers,
         following: store.blog.myFollowing,
-        posts: store.blog.posts
+        posts: store.blog.posts,
+        profile: store.blog.myProfile
     };
 }
 
