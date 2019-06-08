@@ -41,7 +41,7 @@ class AddPostComponent extends Component {
         return (
             <div className = "AddPostComponent">
                 <input type="text" placeholder="what's happening?" className="add-input" value={this.state.text} onChange={this.handleOnChange}/>
-                <div class = "add-image">
+                <div className = "add-image">
                     <ImageUpload/>
                 </div>
                 <button className="add-post__bttn" onClick={this.handleOnTweetClick}>Tweet</button>
