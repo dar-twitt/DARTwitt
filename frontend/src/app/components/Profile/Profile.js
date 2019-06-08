@@ -61,10 +61,20 @@ class Profile extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="profile-main">
+<<<<<<< HEAD
                     <div className="profile-main-child profile-left"><LeftProfile profile={profile}/></div>
                     {/*<div className="profile-main-child profile-settings">*/}
                     {/*</div>*/}
 
+=======
+                    <div className="profile-main-child profile-left"><LeftProfile profile={this.props.profile}/></div>
+                    <div className="profile-main-child profile-settings">
+<<<<<<< HEAD
+                        {/*<button onClick={}>Edit Profile</button>*/}
+=======
+>>>>>>> 62b2342540772c88c77ccf9ad010015652a2869f
+                    </div>
+>>>>>>> d92d6a3a27b1dd0f0f8b67391480616832ebbda0
                     <div className="profile-main-child profile-main">
                         {
                             posts.map((post, index) => {
