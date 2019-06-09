@@ -30,4 +30,10 @@ export function getPost(post){
     return api.get(`http://localhost:8000/post/${post.id}/`, {});
 }
 
+export function repostProfilesPost(profile, post){
+    return api.post(`profile/${profile.id}/repost/${post.id}/`, {});
+}
 
+export function getFollowingsPosts(profile){
+    return api.get(`profile/${profile.id}/fposts/`);
+}

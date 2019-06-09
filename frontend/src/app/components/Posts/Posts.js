@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import { connect } from "react-redux";
-import { logout, getPosts, saveMyProfile, resetPosts } from "../../../actions/blog.actions";
+import { logout, getPosts, saveMyProfile, resetPosts, saveProfile } from "../../../actions/blog.actions";
 import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
 import AddPostComponent from '../AddPostComponent/AddPostComponent';
@@ -28,13 +28,15 @@ class Posts extends Component {
             request.getOwnProfile()
                 .then(response => {
                     this.props.saveMyProfile(response);
-                    request.getPosts()
-                        .then(res => {
-                            this.props.getPosts(res);
-                        })
-                        .catch(res => {
+                    if(this.props.profile){
+                        request.getFollowingsPosts(this.props.profile)
+                            .then(res => {
+                                this.props.getPosts(res);
+                            })
+                            .catch(res => {
 
-                        });
+                            });
+                    }
                 })
                 .catch(response => {
 
@@ -46,13 +48,15 @@ class Posts extends Component {
                 request.getOwnProfile()
                     .then(response => {
                         this.props.saveMyProfile(response);
-                        request.getPosts()
-                            .then(res => {
-                                this.props.getPosts(res);
-                            })
-                            .catch(res => {
+                        if(this.props.profile){
+                            request.getFollowingsPosts(this.props.profile)
+                                .then(res => {
+                                    this.props.getPosts(res);
+                                })
+                                .catch(res => {
 
-                            });
+                                });
+                        }
                     })
                     .catch();
             } else{
@@ -85,7 +89,10 @@ class Posts extends Component {
     };
 
     handleGoToProfileClick = () => {
-        this.props.history.push('/profile');
+        if(this.props.profile){
+            this.props.saveProfile(this.props.profile);
+            this.props.history.push('/profile');
+        }
     };
 
     render() {
@@ -127,4 +134,4 @@ export function mapStateToProps(store){
         profile: store.blog.myProfile
     }
 }
-export default connect(mapStateToProps, { logout, getPosts, saveMyProfile, resetPosts })(Posts);
+export default connect(mapStateToProps, { logout, getPosts, saveMyProfile, resetPosts, saveProfile })(Posts);

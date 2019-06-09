@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import request from '../../../services/requests';
-import { getPosts, getComments } from '../../../actions/blog.actions';
+import { getPosts, getMyPosts, getProfilesPosts } from '../../../actions/blog.actions';
 import './WriteCommentComponent.css';
 class WriteCommentComponent extends Component {
     state = {
@@ -18,18 +18,22 @@ class WriteCommentComponent extends Component {
         const { post } = this.props;
         request.createPostsComment(post, this.state.comment)
             .then(response => {
-                request.getPosts()
-                    .then(response => {
-                        this.props.getPosts(response);
-                        this.setState({
-                            comment: ''
+                if(this.props.profile){
+                    request.getFollowingsPosts(this.props.profile)
+                        .then(res => {
+                            this.props.getPosts(res);
+                        })
+                        .catch(res => {
+
                         });
-                    })
-                    .catch();
-                request.getPostsComments(post)
-                    .then(response => {
-                        this.props.getComments(response);
-                    });
+                }
+                if(this.props.another){
+                    request.getProfilesPosts(this.props.another)
+                        .then(res => {
+                            this.props.getProfilesPosts(res);
+                        })
+                        .catch();
+                }
             })
             .catch();
     };
@@ -50,7 +54,8 @@ class WriteCommentComponent extends Component {
 }
 export function mapStateToProps(store){
     return{
-        profile: store.blog.myProfile
+        profile: store.blog.myProfile,
+        another: store.blog.profile
     }
 }
-export default connect(mapStateToProps, { getPosts, getComments })(WriteCommentComponent);
+export default connect(mapStateToProps, { getPosts, getMyPosts, getProfilesPosts })(WriteCommentComponent);

@@ -3,9 +3,9 @@ import {Link} from "react-router-dom";
 import './Profile.css';
 import LeftProfile from "../LeftProfile/LeftProfile";
 import '../LeftProfile/LeftProfile.css';
-import api from '../../../services/api';
+import api, {updateHeader} from '../../../services/api';
 import request from '../../../services/requests';
-import { getPosts, resetPosts, getMyPosts, saveProfile, saveMyProfileFollowing, saveMyProfileFollowers } from "../../../actions/blog.actions";
+import { getPosts, resetPosts, getMyPosts, saveProfile, saveMyProfileFollowing, saveMyProfileFollowers, getProfilesPosts } from "../../../actions/blog.actions";
 import {connect} from "react-redux";
 import Post from '../Post/Post';
 
@@ -35,7 +35,7 @@ class Profile extends Component {
                 .catch();
             request.getProfilesPosts(profile)
                 .then(res => {
-                    this.props.getMyPosts(res);
+                    this.props.getProfilesPosts(res);
                 })
                 .catch();
         }
@@ -46,7 +46,14 @@ class Profile extends Component {
         if(api.defaults.headers.common['Authorization']){
             this.getData();
         }else{
-
+            const token = localStorage.getItem('token');
+            if(token){
+                updateHeader('Authorization',`Token ${token}`);
+                this.getData();
+            } else{
+                alert('Something wrong!');
+                this.props.history.push('/login');
+            }
         }
     }
 
@@ -78,7 +85,7 @@ class Profile extends Component {
                     <div className="profile-main-child profile-posts">
                         {
                             posts.map((post, index) => {
-                                return <Post post={post} key={index}/>
+                                return post && <Post post={post} key={index}/>
                             })
                         }
                     </div>
@@ -90,7 +97,15 @@ class Profile extends Component {
 export function mapStateToProps(store){
     return {
         profile: store.blog.profile,
-        posts: store.blog.myPosts
+        posts: store.blog.profilesPosts
     };
 }
-export default connect(mapStateToProps, { getPosts, resetPosts, getMyPosts, saveProfile, saveMyProfileFollowers, saveMyProfileFollowing })(Profile);
+export default connect(mapStateToProps,
+    {   getPosts,
+        resetPosts,
+        getMyPosts,
+        saveProfile,
+        getProfilesPosts,
+        saveMyProfileFollowers,
+        saveMyProfileFollowing
+    })(Profile);

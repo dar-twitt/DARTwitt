@@ -1,2 +1,2 @@
 from .generics import *
-from .cbv import ProfilesPostAPIView, ProfileFollowOperation
+from .cbv import ProfilesPostAPIView, ProfileFollowOperation, ProfileRePostAPIView

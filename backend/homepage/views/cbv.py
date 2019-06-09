@@ -46,6 +46,31 @@ class ProfilesPostAPIView(APIView):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
+class ProfileRePostAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_profile(self, pk):
+        try:
+            profile = Profile.objects.get(id=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+        return profile
+
+    def get_post(self, pk):
+        try:
+            post = Post.objects.get(id=pk)
+        except Post.DoesNotExist:
+            raise Http404
+        return post
+
+    def post(self, request, pk1, pk2):
+        profile = self.get_profile(pk1)
+        post = self.get_post(pk2)
+        new_post = Post(image=post.image, owner=profile, repost=post.owner, text=post.text)
+        new_post.save()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+
 class ProfileFollowOperation(APIView):
     permission_classes = (IsAuthenticated,)
 

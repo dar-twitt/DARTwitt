@@ -14,6 +14,8 @@ export const RESET_IMAGE = 'RESET_IMAGE';
 export const GET_POSTS_COMMENTS = 'GET_POST_COMMENTS';
 export const RESET_POSTS = 'RESET_POSTS';
 export const GET_MY_POSTS = 'GET_MY_POSTS';
+export const GET_PROFILES = 'GET_PROFILES';
+export const GET_PROFILES_POST = 'GET_PROFILES_POST';
 
 export const login = response => dispatch => {
     dispatch({
@@ -156,6 +158,24 @@ export const getPosts = response => dispatch => {
         type: GET_POSTS,
         payload: {
             posts: response.data
+        }
+    });
+};
+
+export const getProfiles = profiles => dispatch => {
+    dispatch({
+        type: GET_PROFILES,
+        payload: {
+            profiles: profiles
+        }
+    });
+};
+
+export const getProfilesPosts = response => dispatch => {
+    dispatch({
+        type: GET_PROFILES_POST,
+        payload: {
+            posts : response.data
         }
     });
 };

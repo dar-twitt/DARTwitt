@@ -33,11 +33,11 @@ export function getProfileFollowing(profile){
 }
 
 export function followProfile(yourProfile, anotherProfile){
-    return api.post(`profile/${yourProfile.id}/follow/${anotherProfile.id}`, {});
+    return api.post(`profile/${yourProfile.id}/follow/${anotherProfile.id}/`, {});
 }
 
 export function unfollowProfile(yourProfile, anotherProfile){
-    return api.delete(`profile/${yourProfile.id}/follow/${anotherProfile.id}`);
+    return api.delete(`profile/${yourProfile.id}/follow/${anotherProfile.id}/`);
 }
 
 export function getOwnProfile() {

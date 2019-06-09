@@ -30,11 +30,15 @@ class AddPostComponent extends Component {
                     text: ''
                 });
                 this.props.resetImage();
-                request.getPosts()
-                    .then(res => {
-                        this.props.getPosts(res);
-                    })
-                    .catch();
+                if(this.props.profile){
+                    request.getFollowingsPosts(this.props.profile)
+                        .then(res => {
+                            this.props.getPosts(res);
+                        })
+                        .catch(res => {
+
+                        });
+                }
                 request.getProfilesPosts(this.props.profile)
                     .then(res => {
                         this.props.getMyPosts(res);

@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import './LeftProfile.css';
 import request from "../../../services/requests";
 import {connect} from "react-redux";
-import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getMyPosts } from "../../../actions/blog.actions";
+import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getMyPosts, getProfiles } from "../../../actions/blog.actions";
 import api, {updateHeader} from "../../../services/api";
-
+import { withRouter } from 'react-router-dom';
 class LeftProfile extends Component {
     state = {
         following: [],
@@ -45,7 +45,7 @@ class LeftProfile extends Component {
         }
     };
 
-   componentDidMount() {
+    componentDidMount() {
        if(api.defaults.headers.common['Authorization']){
             this.getData();
        }else{
@@ -55,9 +55,9 @@ class LeftProfile extends Component {
                this.getData();
            }
        }
-   }
+    }
 
-   componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
        if(prevProps !== this.props){
            this.setState({
                profile: this.props.profile || this.state.profile,
@@ -66,7 +66,23 @@ class LeftProfile extends Component {
                followers: this.props.followers || []
            });
        }
-   }
+    }
+
+    handleFollowingClick = () => {
+        if(this.props.following){
+            this.props.getProfiles(this.props.following);
+
+            this.props.history.push('/profiles');
+        }
+    };
+
+
+    handleFollowersClick = () => {
+        if(this.props.followers){
+            this.props.getProfiles(this.props.followers);
+            this.props.history.push('/profiles');
+        }
+    };
 
     render() {
        const { profile } = this.state;
@@ -88,11 +104,11 @@ class LeftProfile extends Component {
                         <div>Tweets</div>
                         <div>{ this.state.posts.length }</div>
                     </div>
-                    <div  className="left-profile-data-info">
+                    <div  className="left-profile-data-info prof" onClick={this.handleFollowingClick}>
                         <div>Following</div>
                         <div>{ this.state.following.length }</div>
                     </div>
-                    <div className="left-profile-data-info">
+                    <div className="left-profile-data-info prof" onClick={this.handleFollowersClick}>
                         <div>Followers</div>
                         <div>{ this.state.followers.length }</div>
                     </div>
@@ -110,4 +126,11 @@ export function mapStateToProps(store){
     };
 }
 
-export default connect(mapStateToProps, { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getMyPosts })(LeftProfile);
+export default withRouter(connect(
+    mapStateToProps,
+    { saveMyProfile,
+        saveMyProfileFollowers,
+        saveMyProfileFollowing,
+        getMyPosts,
+        getProfiles
+    })(LeftProfile));

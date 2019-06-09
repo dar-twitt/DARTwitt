@@ -42,7 +42,6 @@ class ProfilesPostsAPIView(generics.ListAPIView):
     def get_queryset(self):
         posts = Profile.objects.get(id=self.kwargs['pk']).posts.all()
         posts_data = []
-        print(posts)
         for post in posts:
             likes = post.likes.all()
             comments = post.comments.all()
@@ -52,6 +51,28 @@ class ProfilesPostsAPIView(generics.ListAPIView):
                 'comments': comments
             }
             posts_data.append(np)
+        return posts_data
+
+
+class ProfilesFollowingPostsAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = PostDataSerializer
+
+    def get_queryset(self):
+        p1 = Profile.objects.get(id=self.kwargs['pk'])
+        followings = Follow.objects.filter(profile1=p1)
+        posts_data = []
+        for follow in followings:
+            posts = follow.profile2.posts.all()
+            for post in posts:
+                likes = post.likes.all()
+                comments = post.comments.all()
+                np = {
+                    'post': post,
+                    'likes': likes,
+                    'comments': comments
+                }
+                posts_data.append(np)
         return posts_data
 
 
