@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from homepage.serializers import ProfileSerializer
 from homepage.models import Profile, Follow
 from user.serializers import UserSerializer
-from post.serializers import PostSerializer
+from post.serializers import PostSerializer, PostDataSerializer
 from django import forms
 
 
@@ -35,7 +35,27 @@ class ProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
 
 
-class ProfilesPostsAPIView(generics.ListCreateAPIView):
+class ProfilesPostsAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = PostDataSerializer
+
+    def get_queryset(self):
+        posts = Profile.objects.get(id=self.kwargs['pk']).posts.all()
+        posts_data = []
+        print(posts)
+        for post in posts:
+            likes = post.likes.all()
+            comments = post.comments.all()
+            np = {
+                'post': post,
+                'likes': likes,
+                'comments': comments
+            }
+            posts_data.append(np)
+        return posts_data
+
+
+class ProfilesPostsCreateAPIView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = PostSerializer
 
@@ -48,9 +68,7 @@ class ProfilesPostsAPIView(generics.ListCreateAPIView):
         if form.is_valid():
             image = form.cleaned_data['image']
             return serializer.save(owner=profile, image=image)
-    #         return HttpResponse('image upload success')
-    #
-    # return HttpResponseForbidden('allowed only via POST')
+        return serializer.save(owner=profile, image=None)
 
 
 class ProfileFollowingAPIView2(generics.ListAPIView):

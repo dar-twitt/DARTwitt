@@ -2,10 +2,18 @@ import {
     LOGIN,
     REGISTER_USER,
     SAVE_PROFILE,
+    CREATE_PROFILE,
     LOG_OUT,
     GET_POSTS,
     GET_CURRENT_USER,
-    UPDATE_TOKEN, SAVE_MY_PROFILE, SAVE_MY_FOLLOWING, SAVE_MY_FOLLOWERS, SAVE_IMAGE, GET_POSTS_COMMENTS
+    UPDATE_TOKEN,
+    SAVE_MY_PROFILE,
+    SAVE_MY_FOLLOWING,
+    SAVE_MY_FOLLOWERS,
+    SAVE_IMAGE,
+    GET_POSTS_COMMENTS,
+    RESET_POSTS,
+    GET_MY_POSTS, RESET_IMAGE
 } from '../actions/blog.actions';
 
 const initialState = {};
@@ -22,7 +30,7 @@ export default function(state=initialState, action){
                 ...state,
                 status: action.payload.status,
             };
-        case SAVE_PROFILE:
+        case CREATE_PROFILE:
             return {
                 ...state,
                 profile: action.payload.profile
@@ -73,6 +81,26 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 comments: action.payload.comments
+            };
+        case RESET_POSTS:
+            return {
+                ...state,
+                posts: []
+            };
+        case GET_MY_POSTS:
+            return {
+                ...state,
+                myPosts: action.payload.myPosts
+            };
+        case RESET_IMAGE:
+            return {
+                ...state,
+                file: null
+            };
+        case SAVE_PROFILE:
+            return {
+                ...state,
+                profile: action.payload.profile
             };
         default:
             return state;

@@ -40,3 +40,9 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = '__all__'
+
+
+class PostDataSerializer(serializers.Serializer):
+    post = PostSerializer()
+    likes = LikeSerializer(many=True)
+    comments = CommentSerializer(many=True)

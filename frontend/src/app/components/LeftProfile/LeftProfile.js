@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './LeftProfile.css';
 import request from "../../../services/requests";
 import {connect} from "react-redux";
-import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getPosts } from "../../../actions/blog.actions";
+import { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getMyPosts } from "../../../actions/blog.actions";
 import api, {updateHeader} from "../../../services/api";
 
 class LeftProfile extends Component {
@@ -10,7 +10,7 @@ class LeftProfile extends Component {
         following: [],
         followers: [],
         posts: [],
-        profile:{
+        profile: {
             avatar: undefined,
             name: '',
             surname: '',
@@ -21,31 +21,31 @@ class LeftProfile extends Component {
     };
 
     getData = () => {
-        request.getOwnProfile()
-            .then(res => {
-                this.props.saveMyProfile(res);
-                if(this.props.profile){
-                    request.getProfileFollowing(this.props.profile)
-                        .then(response => {
-                            this.props.saveMyProfileFollowing(response);
-                        })
-                        .catch();
-                    request.getProfilesFollowers(this.props.profile)
-                        .then(response => {
-                            this.props.saveMyProfileFollowers(response);
-                        })
-                        .catch();
-                    request.getProfilesPosts(this.props.profile)
-                        .then(response => {
-                            this.props.getPosts(response);
-                        })
-                        .catch();
-                }
+        const profile = this.props.profile || JSON.parse(localStorage.getItem('profile'));
+        if(profile){
+            this.setState({
+                profile: profile
             });
+            localStorage.setItem('profile', JSON.stringify(this.props.profile));
+            request.getProfileFollowing(this.props.profile)
+                .then(response => {
+                    this.props.saveMyProfileFollowing(response);
+                })
+                .catch();
+            request.getProfilesFollowers(this.props.profile)
+                .then(response => {
+                    this.props.saveMyProfileFollowers(response);
+                })
+                .catch();
+            request.getProfilesPosts(this.props.profile)
+                .then(res => {
+                    this.props.getMyPosts(res);
+                })
+                .catch();
+        }
     };
 
    componentDidMount() {
-
        if(api.defaults.headers.common['Authorization']){
             this.getData();
        }else{
@@ -53,8 +53,6 @@ class LeftProfile extends Component {
            if(token){
                updateHeader('Authorization', `Token ${token}`);
                this.getData();
-           }else{
-
            }
        }
    }
@@ -85,18 +83,20 @@ class LeftProfile extends Component {
                 <div className="left-profile-info">
                     <span>{`${profile.name} ${profile.surname} @${profile.user.username}`}</span>
                 </div>
-                <table className="left-profile-data">
-                    <tr>
-                        <td>Tweets</td>
-                        <td>Following</td>
-                        <td>Followers</td>
-                    </tr>
-                    <tr>
-                        <td>{ this.state.posts.length }</td>
-                        <td>{ this.state.following.length }</td>
-                        <td>{ this.state.followers.length }</td>
-                    </tr>
-                </table>
+                <div className="left-profile-data">
+                    <div className="left-profile-data-info">
+                        <div>Tweets</div>
+                        <div>{ this.state.posts.length }</div>
+                    </div>
+                    <div  className="left-profile-data-info">
+                        <div>Following</div>
+                        <div>{ this.state.following.length }</div>
+                    </div>
+                    <div className="left-profile-data-info">
+                        <div>Followers</div>
+                        <div>{ this.state.followers.length }</div>
+                    </div>
+                </div>
            </div>
        );
    }
@@ -106,9 +106,8 @@ export function mapStateToProps(store){
     return{
         followers: store.blog.myFollowers,
         following: store.blog.myFollowing,
-        posts: store.blog.posts,
-        profile: store.blog.myProfile
+        posts: store.blog.myPosts,
     };
 }
 
-export default connect(mapStateToProps, { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getPosts })(LeftProfile);
+export default connect(mapStateToProps, { saveMyProfile, saveMyProfileFollowers, saveMyProfileFollowing, getMyPosts })(LeftProfile);

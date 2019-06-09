@@ -8,8 +8,6 @@ import SignIn from "./components/SignIn/SignIn";
 import Profile from "./components/Profile/Profile";
 import Posts from "./components/Posts/Posts";
 import ImageUpload from "./components/ImageUpload/ImageUpload";
-import LeftProfile from "./components/LeftProfile/LeftProfile";
-// const history = createBrowserHistory();
 
 
 class App extends Component {

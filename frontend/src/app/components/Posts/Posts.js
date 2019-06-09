@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import { connect } from "react-redux";
-import { logout, getPosts, saveMyProfile } from "../../../actions/blog.actions";
+import { logout, getPosts, saveMyProfile, resetPosts } from "../../../actions/blog.actions";
 import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
 import AddPostComponent from '../AddPostComponent/AddPostComponent';
@@ -13,8 +13,7 @@ class Posts extends Component {
 
     state = {
         posts: [],
-        comments: [],
-        profile:{
+        profile: {
             avatar: undefined,
             name: '',
             surname: '',
@@ -25,7 +24,6 @@ class Posts extends Component {
     };
 
     componentDidMount() {
-        console.log(api);
         if(api.defaults.headers.common["Authorization"]){
             request.getOwnProfile()
                 .then(response => {
@@ -33,10 +31,6 @@ class Posts extends Component {
                     request.getPosts()
                         .then(res => {
                             this.props.getPosts(res);
-                            this.setState({
-                                posts: this.props.posts,
-                                isLoggedIn: true
-                            })
                         })
                         .catch(res => {
 
@@ -53,16 +47,15 @@ class Posts extends Component {
                     .then(response => {
                         this.props.saveMyProfile(response);
                         request.getPosts()
-                            .then(response => {
-                                this.props.getPosts(response);
-                                this.setState({
-                                    posts: this.props.posts,
-                                    isLoggedIn: true
-                                })
+                            .then(res => {
+                                this.props.getPosts(res);
+                            })
+                            .catch(res => {
+
                             });
                     })
                     .catch();
-            }else{
+            } else{
                 alert('Something wrong!');
                 this.props.history.push('/login');
             }
@@ -73,8 +66,7 @@ class Posts extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevProps.posts !== this.props.posts){
             this.setState({
-                posts: this.props.posts,
-                comments: this.props.comments || [],
+                posts: this.props.posts || [],
                 profile: this.props.profile || this.state.profile
             });
         }
@@ -92,24 +84,31 @@ class Posts extends Component {
             });
     };
 
+    handleGoToProfileClick = () => {
+        this.props.history.push('/profile');
+    };
+
     render() {
         const { posts } = this.state;
         return (
             <div className = "PostsComponent ">
                 <nav className="posts-nav">
-                    <Link  className = "nav__link" to="/profile">Profile</Link>
+                    <span  className = "nav__link" onClick={this.handleGoToProfileClick}>Profile</span>
                     <div className="nav__link">
                         <input type="text"/>
                     </div>
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="posts-main">
-                    <div className="posts-main-child posts-left"><LeftProfile/></div>
+                    <div className="posts-main-child posts-left">
+                        {
+                            this.props.profile && <LeftProfile profile={this.props.profile}/>
+                        }
+                    </div>
                     <div className="posts-main-child posts-center">
                         <AddPostComponent/>
                         {
                             posts.map((post, index) => {
-                                console.log(post, this.props.profile);
                                 return <Post post={post} key = {index} profile={this.state.profile}/>
                             })
                         }
@@ -125,8 +124,7 @@ class Posts extends Component {
 export function mapStateToProps(store){
     return {
         posts: store.blog.posts,
-        comments: store.blog.comments,
         profile: store.blog.myProfile
     }
 }
-export default connect(mapStateToProps, { logout, getPosts, saveMyProfile })(Posts);
+export default connect(mapStateToProps, { logout, getPosts, saveMyProfile, resetPosts })(Posts);

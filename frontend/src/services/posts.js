@@ -10,7 +10,7 @@ export function getProfilesPosts(profile){
 }
 
 export function createProfilesPost(profile, post){
-    return api.post(`profile/${profile.id}/posts/`, post);
+    return api.post(`profile/${profile.id}/create/`, post);
 }
 export function updateProfilesPost(profile, post){
     return api.put(`profile/${profile.id}/posts/${post.id}/`, {

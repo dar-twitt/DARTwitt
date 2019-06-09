@@ -5,28 +5,47 @@ import LeftProfile from "../LeftProfile/LeftProfile";
 import '../LeftProfile/LeftProfile.css';
 import api from '../../../services/api';
 import request from '../../../services/requests';
-import { saveMyProfile, getPosts } from "../../../actions/blog.actions";
+import { getPosts, resetPosts, getMyPosts, saveProfile, saveMyProfileFollowing, saveMyProfileFollowers } from "../../../actions/blog.actions";
 import {connect} from "react-redux";
 import Post from '../Post/Post';
 
 class Profile extends Component {
 
     state = {
-        posts: [],
+        posts: []
+    };
+
+    getData = () => {
+        const profile = this.props.profile || JSON.parse(localStorage.getItem('profile'));
+        if(profile){
+            this.props.saveProfile(profile);
+            this.setState({
+                profile: profile
+            });
+            localStorage.setItem('profile', JSON.stringify(profile));
+            request.getProfileFollowing(profile)
+                .then(response => {
+                    this.props.saveMyProfileFollowing(response);
+                })
+                .catch();
+            request.getProfilesFollowers(profile)
+                .then(response => {
+                    this.props.saveMyProfileFollowers(response);
+                })
+                .catch();
+            request.getProfilesPosts(profile)
+                .then(res => {
+                    this.props.getMyPosts(res);
+                })
+                .catch();
+        }
     };
 
     componentDidMount() {
+        this.props.resetPosts();
         if(api.defaults.headers.common['Authorization']){
-            request.getOwnProfile()
-                .then( response => {
-                    this.props.saveMyProfile(response);
-                    request.getProfilesPosts(this.props.profile)
-                        .then(res => {
-                            this.props.getPosts(res);
-                        })
-                        .catch();
-                })
-                .catch();
+            this.getData();
+        }else{
 
         }
     }
@@ -34,14 +53,12 @@ class Profile extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.props !== prevProps){
             this.setState({
-                posts: this.props.posts || [],
-                // profile: this.props.profile || this.state.profile
+                posts: this.props.posts || []
             });
         }
     }
 
     render() {
-        const { profile } = this.props;
         const { posts } = this.state;
         return (
             <div className="ProfileComponent">
@@ -53,15 +70,12 @@ class Profile extends Component {
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
                 <div className="profile-main">
-                    <div className="profile-main-child profile-left"><LeftProfile/></div>
-                    {/*<div className="profile-main-child profile-settings">*/}
-                    {/*</div>*/}
-
-                    <div className="profile-main-child profile-settings">
-                        {/*<button onClick={}>Edit Profile</button>*/}
+                    <div className="profile-main-child profile-left">
+                        {
+                            this.props.profile && <LeftProfile profile={this.props.profile}/>
+                        }
                     </div>
-
-                    <div className="profile-main-child profile-main">
+                    <div className="profile-main-child profile-posts">
                         {
                             posts.map((post, index) => {
                                 return <Post post={post} key={index}/>
@@ -75,7 +89,8 @@ class Profile extends Component {
 }
 export function mapStateToProps(store){
     return {
-        profile: store.blog.myProfile,
+        profile: store.blog.profile,
+        posts: store.blog.myPosts
     };
 }
-export default connect(mapStateToProps, { saveMyProfile, getPosts })(Profile);
+export default connect(mapStateToProps, { getPosts, resetPosts, getMyPosts, saveProfile, saveMyProfileFollowers, saveMyProfileFollowing })(Profile);

@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import ImageUpload from '../ImageUpload/ImageUpload';
 import './AddPostComponent.css';
 import request from '../../../services/requests';
-import { getPosts } from "../../../actions/blog.actions";
+import { getPosts, resetImage, getMyPosts } from "../../../actions/blog.actions";
 import * as moment from 'moment';
 import { updateHeader } from "../../../services/api";
 
@@ -17,11 +17,6 @@ class AddPostComponent extends Component {
     }
 
     handleOnTweetClick = () => {
-        // const post = {
-        //     text: this.state.text,
-        //     image: this.props.file,
-        //     created_at: this.formatDate(Date.now())
-        // };
         const post = new FormData();
         if(this.props.file){
             post.append('image', this.props.file, this.props.file.name)
@@ -29,12 +24,20 @@ class AddPostComponent extends Component {
         post.append('text', this.state.text);
         post.append('created_at', this.formatDate(Date.now()));
         updateHeader('Content-Type', 'multipart/form-data');
-        // updateHeader('Content-Length', this.props.file.length);
         request.createProfilesPost(this.props.profile, post)
             .then(response => {
+                this.setState({
+                    text: ''
+                });
+                this.props.resetImage();
                 request.getPosts()
                     .then(res => {
                         this.props.getPosts(res);
+                    })
+                    .catch();
+                request.getProfilesPosts(this.props.profile)
+                    .then(res => {
+                        this.props.getMyPosts(res);
                     })
                     .catch();
             })
@@ -67,4 +70,4 @@ export function mapStateProps(store){
     }
 }
 
-export default connect(mapStateProps, { getPosts })(AddPostComponent);
+export default connect(mapStateProps, { getPosts, resetImage, getMyPosts })(AddPostComponent);
