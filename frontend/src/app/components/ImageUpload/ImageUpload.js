@@ -15,7 +15,11 @@ class ImageUpload extends Component{
     render(){
         return (
             <div className="image__wrapper" >
-                <div className="image" ></div>
+
+                <div className="image" >
+                    <div className="add">+</div>
+                </div>
+
                 <input onChange={this.handleImageChange} className="fileinput" type="file" />
             </div>
         )
