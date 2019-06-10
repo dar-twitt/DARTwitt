@@ -12,7 +12,8 @@ import Profiles from "./components/Profiles/Profiles";
 import LeftProfile from "./components/LeftProfile/LeftProfile";
 import ProfileBrief from "./components/ProfileBrief/ProfileBrief";
 import Post from "./components/Post/Post";
-
+import SearchProfilesComponent from "./components/SearchProfilesComponent/SearchProfilesComponent";
+import EditProfile from "./components/EditProfile/EditProfile";
 class App extends Component {
   render() {
     return (
@@ -37,6 +38,8 @@ class App extends Component {
                 <Route exact path="/left" component = { LeftProfile }/>
                 <Route exact path="/brief" component = { ProfileBrief }/>
                 <Route exact path="/post" component = { Post }/>
+                <Route exact path="/search" component = { SearchProfilesComponent }/>
+                <Route exact path="/edit" component = { EditProfile }/>
             </BrowserRouter>
         </div>
     );

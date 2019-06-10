@@ -4,18 +4,30 @@ from homepage.serializers import ProfileSerializer
 from homepage.models import Profile, Follow
 from user.serializers import UserSerializer
 from post.serializers import PostSerializer, PostDataSerializer
+from rest_framework.response import Response
 from django import forms
 
 
 class ImageUploadForm(forms.Form):
-    """Image upload form."""
     image = forms.ImageField()
+
+
+class ImageUploadForm2(forms.Form):
+    avatar = forms.ImageField()
 
 
 class ProfilesAPIView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+
+    def get_queryset(self):
+        username = self.request.query_params.get('username')
+        profiles_by_username = []
+        profiles = Profile.objects.all()
+        for profile in profiles:
+            if username in profile.user.username:
+                profiles_by_username.append(profile)
+        return profiles_by_username
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
@@ -33,6 +45,19 @@ class ProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
+
+    def perform_update(self, serializer):
+        form = ImageUploadForm2(self.request.POST, self.request.FILES)
+        if form.is_valid():
+            avatar = form.cleaned_data['avatar']
+            return serializer.save(avatar=avatar)
+        return serializer.save()
+
+    def perform_destroy(self, instance):
+        user = instance.user
+        instance.delete()
+        user.delete()
+        return Response({})
 
 
 class ProfilesPostsAPIView(generics.ListAPIView):

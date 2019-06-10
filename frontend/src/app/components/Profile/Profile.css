@@ -50,3 +50,8 @@
     justify-content: flex-start;
     flex-direction: column;
 }
+
+.profile-settings{
+    margin: 20px;
+    font-size: 30px;
+}

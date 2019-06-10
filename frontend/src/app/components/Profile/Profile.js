@@ -4,15 +4,33 @@ import './Profile.css';
 import LeftProfile from "../LeftProfile/LeftProfile";
 import '../LeftProfile/LeftProfile.css';
 import api, {updateHeader} from '../../../services/api';
+import { withRouter } from 'react-router-dom';
 import request from '../../../services/requests';
-import { getPosts, resetPosts, getMyPosts, saveProfile, saveMyProfileFollowing, saveMyProfileFollowers, getProfilesPosts } from "../../../actions/blog.actions";
+import {
+    getPosts,
+    resetPosts,
+    getMyPosts,
+    saveProfile,
+    saveMyProfileFollowing,
+    saveMyProfileFollowers,
+    getProfilesPosts,
+    profileToEdit
+
+} from "../../../actions/blog.actions";
 import {connect} from "react-redux";
 import Post from '../Post/Post';
+import SearchProfilesComponent from "../SearchProfilesComponent/SearchProfilesComponent";
 
 class Profile extends Component {
 
     state = {
-        posts: []
+        posts: [],
+        me: {
+            user: {
+                username: '',
+                password: ''
+            }
+        }
     };
 
     getData = () => {
@@ -60,10 +78,19 @@ class Profile extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.props !== prevProps){
             this.setState({
-                posts: this.props.posts || []
+                posts: this.props.posts || [],
+                me: this.props.me || this.state.me
             });
         }
     }
+
+    handleEditClick = () => {
+        if(this.props.profile){
+            localStorage.setItem('profileToEdit', JSON.stringify(this.props.profile));
+            this.props.profileToEdit(this.props.profile);
+            this.props.history.push('/edit');
+        }
+    };
 
     render() {
         const { posts } = this.state;
@@ -72,7 +99,7 @@ class Profile extends Component {
                 <nav className="profile-nav">
                     <Link  className = "nav__link" to="/posts">Posts</Link>
                     <div className="nav__link">
-                        <input type="text"/>
+                        <SearchProfilesComponent/>
                     </div>
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>
@@ -80,6 +107,12 @@ class Profile extends Component {
                     <div className="profile-main-child profile-left">
                         {
                             this.props.profile && <LeftProfile profile={this.props.profile}/>
+                        }
+                        {
+                            this.props.profile &&
+                            this.props.me &&
+                            this.props.me.user.username === this.props.profile.user.username &&
+                            <i className="icon-settings profile-settings" onClick={this.handleEditClick}></i>
                         }
                     </div>
                     <div className="profile-main-child profile-posts">
@@ -96,16 +129,18 @@ class Profile extends Component {
 }
 export function mapStateToProps(store){
     return {
+        me: store.blog.myProfile,
         profile: store.blog.profile,
         posts: store.blog.profilesPosts
     };
 }
-export default connect(mapStateToProps,
+export default withRouter(connect(mapStateToProps,
     {   getPosts,
         resetPosts,
         getMyPosts,
         saveProfile,
         getProfilesPosts,
         saveMyProfileFollowers,
-        saveMyProfileFollowing
-    })(Profile);
+        saveMyProfileFollowing,
+        profileToEdit
+    })(Profile));

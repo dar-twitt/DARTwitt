@@ -3,6 +3,10 @@ import {connect} from "react-redux";
 import ProfileBrief from "../ProfileBrief/ProfileBrief";
 // import { getProfiles } from "../../../actions/blog.actions";
 import './Profiles.css';
+import {Link} from "react-router-dom";
+import SearchProfilesComponent from "../SearchProfilesComponent/SearchProfilesComponent";
+import request from "../../../services/requests";
+import {updateHeader} from "../../../services/api";
 class Profiles extends Component {
 
     state = {
@@ -33,10 +37,29 @@ class Profiles extends Component {
         }
     }
 
+    handleLogoutClick = () => {
+        localStorage.clear();
+        request.logout()
+            .then(response => {
+                this.props.logout(response);
+                updateHeader('Authorization', '');
+            })
+            .catch(response => {
+                alert('Something wrong!');
+            });
+    };
+
     render() {
         const { profiles } = this.state;
         return (
             <div className="ProfilesComponent">
+                <nav className="profile-nav">
+                    <Link  className = "nav__link" to="/posts">Posts</Link>
+                    <div className="nav__link">
+                        <SearchProfilesComponent/>
+                    </div>
+                    <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
+                </nav>
                <div className="profiles__profile">
                    {
                        profiles.map((profile, index) => {

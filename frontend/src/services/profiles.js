@@ -1,7 +1,11 @@
 import api from './api';
 
-export function getProfiles(){
-    return api.get('profile/');
+export function getProfiles(username){
+    return api.get('profile/', {
+        params: {
+            username: username
+        }
+    })
 }
 
 export function createProfile( name, surname){
@@ -12,12 +16,8 @@ export function createProfile( name, surname){
     );
 }
 
-export function updateProfile(profile){
-    return api.put(`profile/${profile.id}/`, {
-        bio: profile.bio,
-        name: profile.name,
-        surname: profile.surname
-    });
+export function updateProfile(id, profile){
+    return api.put(`profile/${id}/`, profile);
 }
 
 export function deleteProfile(profile){

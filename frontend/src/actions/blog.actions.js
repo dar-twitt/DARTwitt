@@ -16,6 +16,7 @@ export const RESET_POSTS = 'RESET_POSTS';
 export const GET_MY_POSTS = 'GET_MY_POSTS';
 export const GET_PROFILES = 'GET_PROFILES';
 export const GET_PROFILES_POST = 'GET_PROFILES_POST';
+export const PROFILE_TO_EDIT = 'PROFILE_TO_EDIT';
 
 export const login = response => dispatch => {
     dispatch({
@@ -176,6 +177,15 @@ export const getProfilesPosts = response => dispatch => {
         type: GET_PROFILES_POST,
         payload: {
             posts : response.data
+        }
+    });
+};
+
+export const profileToEdit = profile => dispatch => {
+    dispatch({
+        type: PROFILE_TO_EDIT,
+        payload: {
+            profile: profile
         }
     });
 };

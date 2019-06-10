@@ -5,6 +5,7 @@ import { logout, getPosts, saveMyProfile, resetPosts, saveProfile } from "../../
 import Post from '../Post/Post';
 import LeftProfile from '../LeftProfile/LeftProfile';
 import AddPostComponent from '../AddPostComponent/AddPostComponent';
+import SearchProfilesComponent from '../SearchProfilesComponent/SearchProfilesComponent';
 import request from "../../../services/requests";
 import api, {updateHeader} from "../../../services/api";
 import './Posts.css';
@@ -38,9 +39,7 @@ class Posts extends Component {
                             });
                     }
                 })
-                .catch(response => {
-
-                });
+                .catch(response => {});
         }else {
             const token = localStorage.getItem('token');
             if(token){
@@ -102,7 +101,7 @@ class Posts extends Component {
                 <nav className="posts-nav">
                     <span  className = "nav__link" onClick={this.handleGoToProfileClick}>Profile</span>
                     <div className="nav__link">
-                        <input type="text"/>
+                        <SearchProfilesComponent/>
                     </div>
                     <Link className = "nav__link" to="/" onClick={this.handleLogoutClick}>Logout</Link>
                 </nav>

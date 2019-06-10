@@ -13,7 +13,7 @@ import {
     SAVE_IMAGE,
     GET_POSTS_COMMENTS,
     RESET_POSTS,
-    GET_MY_POSTS, RESET_IMAGE, GET_PROFILES, GET_PROFILES_POST
+    GET_MY_POSTS, RESET_IMAGE, GET_PROFILES, GET_PROFILES_POST, PROFILE_TO_EDIT
 } from '../actions/blog.actions';
 
 const initialState = {};
@@ -111,6 +111,11 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 profilesPosts: action.payload.posts
+            };
+        case PROFILE_TO_EDIT:
+            return {
+                ...state,
+                profileToEdit: action.payload.profile
             };
         default:
             return state;

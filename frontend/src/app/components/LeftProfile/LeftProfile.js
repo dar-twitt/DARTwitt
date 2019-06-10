@@ -123,6 +123,7 @@ export function mapStateToProps(store){
         followers: store.blog.myFollowers,
         following: store.blog.myFollowing,
         posts: store.blog.myPosts,
+
     };
 }
 
